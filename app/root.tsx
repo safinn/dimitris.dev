@@ -1,5 +1,5 @@
 import { cssBundleHref } from '@remix-run/css-bundle'
-import type { LinksFunction } from '@remix-run/node'
+import type { LinksFunction, LoaderArgs } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -7,8 +7,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react'
+import clsx from 'clsx'
+import type { Theme } from '~/utils/theme-provider'
+import {
+  NonFlashOfWrongThemeEls,
+  ThemeProvider,
+  useTheme,
+} from '~/utils/theme-provider'
 import styles from './tailwind.css'
+import { getThemeSession } from './utils/theme.server'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -17,22 +26,50 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
 ]
 
-export default function App() {
+export type LoaderData = {
+  theme: Theme | null
+}
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const themeSession = await getThemeSession(request)
+
+  const data: LoaderData = {
+    theme: themeSession.getTheme(),
+  }
+
+  return data
+}
+
+function App() {
+  const data = useLoaderData<LoaderData>()
+  const [theme] = useTheme()
+
   return (
-    <html lang="en">
+    <html lang="en" className={clsx(theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="author" content="Dimitris Karittevlis" />
         <Meta />
         <Links />
+        <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
       </head>
-      <body>
+      <body className="bg-zinc-50 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 selection:bg-[#8884]">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
       </body>
     </html>
+  )
+}
+
+export default function AppWithProviders() {
+  const data = useLoaderData<typeof loader>()
+
+  return (
+    <ThemeProvider specifiedTheme={data.theme}>
+      <App />
+    </ThemeProvider>
   )
 }
