@@ -16,7 +16,7 @@ import {
   ThemeProvider,
   useTheme,
 } from '~/utils/theme-provider'
-import styles from './tailwind.css'
+import styles from './styles/tailwind.css'
 import { getThemeSession } from './utils/theme.server'
 
 export const links: LinksFunction = () => [
