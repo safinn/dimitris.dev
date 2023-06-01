@@ -14,27 +14,23 @@ export default function Index() {
         Dimitris
       </h1>
       <p>
-        Software Engineer at{' '}
-        <a
-          className="text-zinc-900 dark:text-zinc-100"
-          href="https://riskledger.com"
-        >
-          Risk Ledger
-        </a>
+        Software Engineer at <A href="https://riskledger.com">Risk Ledger</A>
       </p>
       <p>
-        Previously{' '}
-        <a className="text-zinc-900 dark:text-zinc-100" href="https://sky.com">
-          Sky
-        </a>{' '}
-        and{' '}
-        <a
-          className="text-zinc-900 dark:text-zinc-100"
-          href="https://rolls-roycemotorcars.com"
-        >
-          Rolls-Royce Motor Cars
-        </a>
+        Previously <A href="https://sky.com">Sky</A> and{' '}
+        <A href="https://rolls-roycemotorcars.com">Rolls-Royce Motor Cars</A>
       </p>
     </div>
+  )
+}
+
+function A({ children, href }: { children: string; href: string }) {
+  return (
+    <a
+      className="text-zinc-900 dark:text-zinc-100 border-b border-zinc-900 dark:border-zinc-100 border-opacity-20 dark:border-opacity-20 hover:border-opacity-100 hover:dark:border-opacity-100 transition-colors"
+      href={href}
+    >
+      {children}
+    </a>
   )
 }
