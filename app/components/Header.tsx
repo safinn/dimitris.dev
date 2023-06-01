@@ -9,7 +9,9 @@ export default function Header() {
         <div className="dark:text-zinc-50 text-zinc-900">Logo</div>
         <nav className="flex space-x-[1.2em] items-center">
           <NavItem to="/">Home</NavItem>
-          <NavItem to="/blog">Blog</NavItem>
+          <NavItem to="/blog" disabled>
+            Blog
+          </NavItem>
           <NavItem to="https://twitter.com/safinn" target="_blank">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,19 +64,30 @@ export default function Header() {
 function NavItem({
   children,
   to,
+  disabled = false,
   ...rest
 }: {
   children: string | JSX.Element
   to: string
+  disabled?: boolean
   target?: string
 }) {
-  return (
+  return disabled ? (
+    <div
+      className={clsx(
+        'text-zinc-900 dark:text-zinc-100 opacity-60',
+        disabled ? 'line-through cursor-not-allowed' : ''
+      )}
+    >
+      {children}
+    </div>
+  ) : (
     <NavLink
       to={to}
       className={({ isActive, isPending }) =>
         clsx(
-          'text-zinc-900 dark:text-zinc-100 opacity-60 hover:opacity-100 transition-opacity',
-          isPending || isActive ? 'opacity-100' : ''
+          'text-zinc-900 dark:text-zinc-100 hover:opacity-100 transition-opacity',
+          isPending || isActive ? 'opacity-100' : 'opacity-60'
         )
       }
       {...rest}
