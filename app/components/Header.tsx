@@ -6,7 +6,9 @@ export default function Header() {
   return (
     <header className="py-8 px-6">
       <div className="max-w-screen-sm mx-auto flex items-center justify-between ">
-        <div className="dark:text-zinc-50 text-zinc-900">Logo</div>
+        <div className="dark:text-zinc-50 text-zinc-900 text-4xl font-bold">
+          δ
+        </div>
         <nav className="flex space-x-[1.2em] items-center">
           <NavItem to="/">Home</NavItem>
           <NavItem to="/blog" disabled>
