@@ -1,5 +1,4 @@
 import type { V2_MetaFunction } from '@remix-run/node'
-import Toggletheme from '~/components/ToggleTheme'
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -10,9 +9,8 @@ export const meta: V2_MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="leading-relaxed">
+    <div className="max-w-screen-sm mx-auto">
       <h1>Index page</h1>
-      <Toggletheme />
     </div>
   )
 }

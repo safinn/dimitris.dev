@@ -1,6 +1,6 @@
 import { Theme, useTheme } from '~/utils/theme-provider'
 
-export default function Toggletheme() {
+export default function ToggleTheme() {
   const [theme, setTheme] = useTheme()
 
   const toggleTheme = () => {
@@ -10,12 +10,15 @@ export default function Toggletheme() {
   }
 
   return (
-    <button onClick={toggleTheme}>
+    <button
+      className="text-zinc-900 dark:text-zinc-100 opacity-60 hover:opacity-100 transition-opacity"
+      onClick={toggleTheme}
+    >
       {theme === Theme.LIGHT ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="1.2em"
+          height="1.2em"
           viewBox="0 0 24 24"
         >
           <rect x="0" y="0" width="24" height="24" fill="none" stroke="none" />
@@ -27,8 +30,8 @@ export default function Toggletheme() {
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="1.2em"
+          height="1.2em"
           viewBox="0 0 24 24"
         >
           <rect x="0" y="0" width="24" height="24" fill="none" stroke="none" />
