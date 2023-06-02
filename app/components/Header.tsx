@@ -11,9 +11,7 @@ export default function Header() {
         </div>
         <nav className="flex space-x-[1.2em] items-center">
           <NavItem to="/">Home</NavItem>
-          <NavItem to="/blog" disabled>
-            Blog
-          </NavItem>
+          <NavItem to="/posts">Blog</NavItem>
           <NavItem
             to="https://twitter.com/safinn"
             target="_blank"

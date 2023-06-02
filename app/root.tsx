@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 }
 
 function App() {
-  const data = useLoaderData<LoaderData>()
+  const data = useLoaderData<typeof loader>()
   const [theme] = useTheme()
 
   return (

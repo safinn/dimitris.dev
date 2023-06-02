@@ -18,7 +18,9 @@ export default function Index() {
       </p>
       <p>
         Previously <A href="https://sky.com">Sky</A> and{' '}
-        <A href="https://rolls-roycemotorcars.com">Rolls-Royce Motor Cars</A>
+        <A href="https://www.rolls-roycemotorcars.com">
+          Rolls-Royce Motor Cars
+        </A>
       </p>
     </div>
   )
@@ -28,6 +30,8 @@ function A({ children, href }: { children: string; href: string }) {
   return (
     <a
       className="text-zinc-900 dark:text-zinc-100 border-b border-zinc-900 dark:border-zinc-100 border-opacity-20 dark:border-opacity-20 hover:border-opacity-100 hover:dark:border-opacity-100 transition-colors"
+      target="_blank"
+      rel="noreferrer"
       href={href}
     >
       {children}

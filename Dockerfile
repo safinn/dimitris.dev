@@ -43,6 +43,13 @@ FROM base
 # Copy built application
 COPY --from=build /app /app
 
+# Setup volume for sqlite3
+RUN mkdir -p /data
+VOLUME /data
+
+# Setup envs for sqlite3
+ENV CACHE_DATABASE_PATH="/data/cache.db"
+
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 CMD [ "pnpm", "run", "start" ]
