@@ -12,6 +12,7 @@ export default function ToggleTheme() {
   return (
     <button
       className="text-zinc-900 dark:text-zinc-100 opacity-60 hover:opacity-100 transition-opacity"
+      aria-label="Theme mode toggle"
       onClick={toggleTheme}
     >
       {theme === Theme.LIGHT ? (

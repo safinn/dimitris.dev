@@ -14,7 +14,11 @@ export default function Header() {
           <NavItem to="/blog" disabled>
             Blog
           </NavItem>
-          <NavItem to="https://twitter.com/safinn" target="_blank">
+          <NavItem
+            to="https://twitter.com/safinn"
+            target="_blank"
+            ariaLabel="Link to Twitter"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.2em"
@@ -35,7 +39,11 @@ export default function Header() {
               />
             </svg>
           </NavItem>
-          <NavItem to="https://github.com/safinn" target="_blank">
+          <NavItem
+            to="https://github.com/safinn"
+            target="_blank"
+            ariaLabel="Link to GitHub"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.2em"
@@ -67,12 +75,14 @@ function NavItem({
   children,
   to,
   disabled = false,
+  ariaLabel,
   ...rest
 }: {
   children: string | JSX.Element
   to: string
   disabled?: boolean
   target?: string
+  ariaLabel?: string
 }) {
   return disabled ? (
     <div
@@ -92,6 +102,7 @@ function NavItem({
           isPending || isActive ? 'opacity-100' : 'opacity-60'
         )
       }
+      aria-label={ariaLabel}
       {...rest}
     >
       {children}
