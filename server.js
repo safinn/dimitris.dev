@@ -25,8 +25,8 @@ app.use(
   express.static('public/build', { immutable: true, maxAge: '1y' })
 )
 
-// Everything else (like favicon.ico) is cached for 30 days.
-app.use(express.static('public', { maxAge: '30d' }))
+// Everything else (like favicon.ico) is cached for 1 year.
+app.use(express.static('public', { immutable: true, maxAge: '1y' }))
 
 app.use(morgan('tiny'))
 
