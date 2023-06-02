@@ -50,8 +50,6 @@ function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="author" content="Dimitris Karittevlis" />
-        <link rel="preconnect" href="https://rsms.me/" />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
         <Meta />
         <Links />
         <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
