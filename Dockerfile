@@ -21,7 +21,10 @@ FROM base as build
 
 # Commit SHA used in build/info.json
 ARG COMMIT_SHA
+ARG BOT_GITHUB_TOKEN
+
 ENV COMMIT_SHA=$COMMIT_SHA
+ENV BOT_GITHUB_TOKEN=$BOT_GITHUB_TOKEN
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \

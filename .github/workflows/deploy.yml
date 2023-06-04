@@ -101,6 +101,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: superfly/flyctl-actions@1.4
         with:
-          args: 'deploy --remote-only --build-arg COMMIT_SHA=${{ github.sha }}'
+          args: 'deploy --remote-only --build-arg COMMIT_SHA=${{ github.sha }} --build-arg BOT_GITHUB_TOKEN=${{ env.BOT_GITHUB_TOKEN }}'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
