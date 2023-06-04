@@ -40,7 +40,12 @@ export default function Posts() {
 
 function PostItem({ post }: { post: MdxListItem }) {
   return (
-    <li>
+    <li className="flex space-x-2 items-center">
+      {(post.frontmatter.draft || post.frontmatter.unlisted) && (
+        <span className="text-xs font-semibold uppercase bg-orange-500 rounded px-1 py-0.5 text-zinc-800">
+          {post.frontmatter.draft ? 'Draft' : 'Unlisted'}
+        </span>
+      )}
       <Link to={post.slug}>{post.frontmatter.title}</Link>
     </li>
   )

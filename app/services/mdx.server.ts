@@ -186,9 +186,10 @@ export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
     async getFreshValue() {
       let pages = await getMdxPagesInDirectory('posts', options).then(
         (allPosts) =>
-          allPosts.filter(
-            (p) => !p.frontmatter.draft && !p.frontmatter.unlisted
-          )
+          allPosts.filter((p) => {
+            if (process.env.NODE_ENV === 'development') return true
+            return !p.frontmatter.draft && !p.frontmatter.unlisted
+          })
       )
 
       pages = pages.sort((a, z) => {
