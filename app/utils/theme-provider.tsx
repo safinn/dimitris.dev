@@ -1,4 +1,3 @@
-import { useFetcher } from '@remix-run/react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 
@@ -49,14 +48,6 @@ function ThemeProvider({
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
-  const persistTheme = useFetcher()
-
-  // TODO: remove this when persistTheme is memoized properly
-  const persistThemeRef = useRef(persistTheme)
-  useEffect(() => {
-    persistThemeRef.current = persistTheme
-  }, [persistTheme])
-
   const mountRun = useRef(false)
 
   useEffect(() => {
@@ -68,10 +59,10 @@ function ThemeProvider({
       return
     }
 
-    persistThemeRef.current.submit(
-      { theme },
-      { action: 'action/set-theme', method: 'post' }
-    )
+    fetch('action/set-theme', {
+      method: 'post',
+      body: JSON.stringify(theme),
+    })
   }, [theme])
 
   return (
