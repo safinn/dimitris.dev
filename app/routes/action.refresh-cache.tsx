@@ -84,9 +84,7 @@ export async function action({ request }: DataFunctionArgs) {
 
     // if any posts contentPaths were changed then let's update the dir list
     // so it will appear on the blog page.
-    console.log(refreshingContentPaths)
     if (refreshingContentPaths.some((p) => p.startsWith('posts'))) {
-      console.log('in getBlogMdxListItems')
       void getBlogMdxListItems({
         forceFresh: true,
       })

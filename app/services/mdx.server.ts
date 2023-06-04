@@ -174,7 +174,7 @@ function mapFromMdxPageToMdxListItem(page: MdxPage): MdxListItem {
 }
 
 export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
-  const { forceFresh, ttl = defaultTTL } = options || {}
+  const { forceFresh = false, ttl = defaultTTL } = options || {}
   const key = 'posts:mdx-list-items'
 
   return cachified({
@@ -184,8 +184,11 @@ export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
     ttl,
     staleWhileRevalidate: defaultStaleWhileRevalidate,
     async getFreshValue() {
-      let pages = await getMdxPagesInDirectory('posts').then((allPosts) =>
-        allPosts.filter((p) => !p.frontmatter.draft && !p.frontmatter.unlisted)
+      let pages = await getMdxPagesInDirectory('posts', options).then(
+        (allPosts) =>
+          allPosts.filter(
+            (p) => !p.frontmatter.draft && !p.frontmatter.unlisted
+          )
       )
 
       pages = pages.sort((a, z) => {
