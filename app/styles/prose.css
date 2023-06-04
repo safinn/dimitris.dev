@@ -1,0 +1,17 @@
+.prose {
+  --fg: theme(textColor.zinc.700);
+  --fg-deep: theme(textColor.zinc.800);
+  --fg-deeper: theme(textColor.zinc.900);
+}
+
+html.dark .prose {
+  --fg: theme(textColor.zinc.400);
+  --fg-deep: theme(textColor.zinc.300);
+  --fg-deeper: theme(textColor.zinc.200);
+}
+
+.prose {
+  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.75;
+}

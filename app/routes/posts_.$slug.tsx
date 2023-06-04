@@ -1,8 +1,11 @@
-import type { LoaderArgs } from '@remix-run/node'
+import type { LinksFunction, LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
+import styles from '~/styles/prose.css'
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   if (!params.slug) {
@@ -22,7 +25,7 @@ export default function Post() {
   const Component = useMdxComponent(code)
 
   return (
-    <article className="max-w-screen-sm mx-auto">
+    <article className="max-w-screen-sm mx-auto prose">
       <Component />
     </article>
   )
