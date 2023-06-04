@@ -8,10 +8,10 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
   slug: string,
   githubFiles: Array<GitHubFile>
 ) {
-  const { default: remarkAutolinkHeadings } = await import(
-    'remark-autolink-headings'
+  const { default: rehypeAutolinkHeadings } = await import(
+    'rehype-autolink-headings'
   )
-  const { default: remarkSlug } = await import('remark-slug')
+  const { default: rehypeSlug } = await import('rehype-slug')
   const { default: gfm } = await import('remark-gfm')
 
   const indexRegex = new RegExp(`${slug}\\/index.mdx?$`)
@@ -35,13 +35,12 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
       source: indexFile.content,
       files,
       mdxOptions(options) {
-        options.remarkPlugins = [
-          ...(options.remarkPlugins ?? []),
-          remarkSlug,
-          [remarkAutolinkHeadings, { behavior: 'wrap' }],
-          gfm,
+        options.remarkPlugins = [...(options.remarkPlugins ?? []), gfm]
+        options.rehypePlugins = [
+          ...(options.rehypePlugins ?? []),
+          rehypeSlug,
+          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
         ]
-        options.rehypePlugins = [...(options.rehypePlugins ?? [])]
         return options
       },
     })
