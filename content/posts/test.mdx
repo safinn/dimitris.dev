@@ -3,218 +3,70 @@ name: GitHub Flavored Markdown Test
 date: 2023-06-04
 ---
 
-# h1 Heading 8-)
+# Title
 
-## h2 Heading
+## TOPIC_NAME
 
-### h3 Heading
+TOPIC_DETAILS
+blah blah blah...
 
-#### h4 Heading
+## Table of Contents
 
-##### h5 Heading
+- topic content 1 [Reference](http://dibya.org)
+- Renders actual, "native" React DOM elements
+- Allows you to escape or skip HTML (try toggling the checkboxes above)
+- If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!
 
-###### h6 Heading
+## Getting started
 
-## Horizontal Rules
+Preliminary question:
 
-## Typographic replacements
+<button onClick={() => alert(42)}>
+  What is the answer to the mystery of universe ??
+</button>
 
-Enable typographer option to see result.
+## HTML block below
 
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
+<blockquote>
+  This blockquote will change based on the HTML settings above.
+</blockquote>
 
-test.. test... test..... test?..... test!....
-
-!!!!!! ???? ,, -- ---
-
-"Smartypants, double quotes" and 'single quotes'
-
-## Emphasis
-
-**This is bold text**
-
-**This is bold text**
-
-_This is italic text_
-
-_This is italic text_
-
-~~Strikethrough~~
-
-## Blockquotes
-
-> Blockquotes can also be nested...
->
-> > ...by using additional greater-than signs right next to each other...
-> >
-> > > ...or with spaces between arrows.
-
-## Lists
-
-Unordered
-
-- Create a list by starting a line with `+`, `-`, or `*`
-- Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    - Ac tristique libero volutpat at
-    * Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-- Very easy!
-
-Ordered
-
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-
-4. You can use sequential numbers...
-5. ...or keep all the numbers as `1.`
-
-Start numbering with offset:
-
-57. foo
-1. bar
-
-## Code
-
-Inline `code`
-
-Indented code
-
-    // Some comments
-    line 1 of code
-    line 2 of code
-    line 3 of code
-
-Block code "fences"
-
-```
-Sample text here...
-```
-
-Syntax highlighting
+## How about some code?
 
 ```js
-var foo = function (bar) {
-  return bar++
-}
-
-console.log(foo(5))
+var React = require('react')
+var Markdown = require('react-markdown')
+React.render(
+  <Markdown source="# Your markdown here" />,
+  document.getElementById('content')
+)
 ```
 
-## Tables
+Pretty neat, eh?
 
-| Option | Description                                                               |
-| ------ | ------------------------------------------------------------------------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default.    |
-| ext    | extension to be used for dest files.                                      |
+## Tables?
 
-Right aligned columns
+| Feature   | Support |
+| --------- | ------- |
+| tables    | ✔       |
+| alignment | ✔       |
+| wewt      | ✔       |
 
-| Option |                                                               Description |
-| -----: | ------------------------------------------------------------------------: |
-|   data | path to data files to supply the data that will be passed into templates. |
-| engine |    engine to be used for processing templates. Handlebars is the default. |
-|    ext |                                      extension to be used for dest files. |
+## More info?
 
-## Links
+## Read usage information and more on [GitHub](//github.com/rexxars/react-markdown)
 
-[link text](http://dev.nodeca.com)
+A component by [Espen Hovlandsdal](https://espen.codes/)
 
-[link with title](http://nodeca.github.io/pica/demo/ 'title text!')
+### h3
 
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
+#### h4
 
-## Images
+##### h5
 
-![Minion](https://octodex.github.com/images/minion.png)
-![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg 'The Stormtroopocat')
+###### h6
 
-Like links, Images also have a footnote style syntax
-
-![Alt text][id]
-
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg 'The Dojocat'
-
-## Plugins
-
-The killer feature of `markdown-it` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-### [Emojies](https://github.com/markdown-it/markdown-it-emoji)
-
-> Classic markup: :wink: :crush: :cry: :tear: :laughing: :yum:
->
-> Shortcuts (emoticons): :-) :-( 8-) ;)
-
-see [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
-
-### [\<ins>](https://github.com/markdown-it/markdown-it-ins)
-
-++Inserted text++
-
-### [\<mark>](https://github.com/markdown-it/markdown-it-mark)
-
-==Marked text==
-
-### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)
-
-Footnote 1 link[^first].
-
-Footnote 2 link[^second].
-
-Inline footnote^[Text of inline footnote] definition.
-
-Duplicated footnote reference[^second].
-
-[^first]: Footnote **can have markup**
-
-    and multiple paragraphs.
-
-[^second]: Footnote text.
-
-### [Definition lists](https://github.com/markdown-it/markdown-it-deflist)
-
-Term 1
-
-: Definition 1
-with lazy continuation.
-
-Term 2 with _inline markup_
-
-: Definition 2
-
-        { some code, part of Definition 2 }
-
-    Third paragraph of definition 2.
-
-_Compact style:_
-
-Term 1
-~ Definition 1
-
-Term 2
-~ Definition 2a
-~ Definition 2b
-
-### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
-
-This is HTML abbreviation example.
-
-It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
-
-\*[HTML]: Hyper Text Markup Language
-
-### [Custom containers](https://github.com/markdown-it/markdown-it-container)
-
-::: warning
-_here be dragons_
-:::
+1. one
+2. two
+3. three
+4. four
