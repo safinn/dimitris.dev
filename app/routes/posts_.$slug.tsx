@@ -21,12 +21,23 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function Post() {
   const data = useLoaderData<typeof loader>()
-  const { code, dateDisplay, frontmatter } = data.page
+  const { code, dateDisplay, frontmatter, readTime } = data.page
   const Component = useMdxComponent(code)
 
   return (
-    <article className="max-w-screen-sm mx-auto prose">
-      <Component />
-    </article>
+    <>
+      <header className="max-w-screen-sm mx-auto mb-20">
+        <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-200">
+          {frontmatter.title}
+        </h1>
+        <div className="mt-2">
+          {dateDisplay}
+          {readTime ? ` · ${readTime.text}` : ''}
+        </div>
+      </header>
+      <article className="max-w-screen-sm mx-auto prose">
+        <Component />
+      </article>
+    </>
   )
 }
