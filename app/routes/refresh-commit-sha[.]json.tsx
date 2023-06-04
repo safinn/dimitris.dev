@@ -12,9 +12,8 @@ export async function loader() {
     return json(null)
   }
 
-  let value: RefreshShaInfo
+  const value: RefreshShaInfo = result.value
   try {
-    value = JSON.parse(result.value as any)
     if (!isRefreshShaInfo(value)) {
       throw new Error(`Invalid value: ${result.value}`)
     }

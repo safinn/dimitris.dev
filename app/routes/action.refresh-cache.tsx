@@ -82,7 +82,7 @@ export async function action({ request }: DataFunctionArgs) {
       }
     }
 
-    // if any blog contentPaths were changed then let's update the dir list
+    // if any posts contentPaths were changed then let's update the dir list
     // so it will appear on the blog page.
     console.log(refreshingContentPaths)
     if (refreshingContentPaths.some((p) => p.startsWith('posts'))) {
