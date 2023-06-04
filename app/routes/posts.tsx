@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import type { MdxListItem } from '~/services/mdx.servers'
-import { getBlogMdxListItems } from '~/services/mdx.servers'
+import type { MdxListItem } from '~/services/mdx.server'
+import { getBlogMdxListItems } from '~/services/mdx.server'
 
 export const loader = async ({ request }: LoaderArgs) => {
   const posts = await getBlogMdxListItems()

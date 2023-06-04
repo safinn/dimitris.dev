@@ -90,7 +90,7 @@ async function getMdxPagesInDirectory(
 
 const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
 
-async function getMdxDirList(
+export async function getMdxDirList(
   contentDir: string,
   options?: OptionalCachifiedOptions
 ) {

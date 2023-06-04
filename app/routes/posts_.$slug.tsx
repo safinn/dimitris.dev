@@ -1,7 +1,7 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { getMdxPage } from '~/services/mdx.servers'
+import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 
 export const loader = async ({ request, params }: LoaderArgs) => {
