@@ -19,6 +19,10 @@ RUN npm install -g pnpm@$PNPM_VERSION
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
+# Commit SHA used in build/info.json
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
+
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
     apt-get install -y python-is-python3 pkg-config build-essential

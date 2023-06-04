@@ -22,7 +22,18 @@ app.disable('x-powered-by')
 // Remix fingerprints its assets so we can cache forever.
 app.use(
   '/build',
-  express.static('public/build', { immutable: true, maxAge: '1y' })
+  express.static('public/build', {
+    immutable: true,
+    maxAge: '1y',
+    setHeaders(res, resourcePath) {
+      const relativePath = resourcePath.replace(`/app/public/build/`, '')
+
+      if (relativePath.startsWith('info.json')) {
+        res.setHeader('cache-control', 'no-cache')
+        return
+      }
+    },
+  })
 )
 
 // Everything else (like favicon.ico) is cached for 1 year.

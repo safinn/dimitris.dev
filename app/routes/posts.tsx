@@ -6,12 +6,6 @@ import { getBlogMdxListItems } from '~/services/mdx.servers'
 export const loader = async ({ request }: LoaderArgs) => {
   const posts = await getBlogMdxListItems()
 
-  return { posts }
-}
-
-export default function Posts() {
-  const data = useLoaderData<typeof loader>()
-
   const emptyLines = [
     'Empty blog post list: the ultimate Zen experience. Embrace the void, my friend.',
     `Congratulations! You've discovered the hidden treasure of the blog: a
@@ -21,10 +15,18 @@ export default function Posts() {
     `Beneath this mask of emptiness, lies the potential for epic tales and profound musings. Stay tuned for future revelations.`,
   ]
 
+  const emptyLine = emptyLines[Math.floor(Math.random() * emptyLines.length)]
+
+  return { posts, emptyLine }
+}
+
+export default function Posts() {
+  const data = useLoaderData<typeof loader>()
+
   return (
     <div className="max-w-screen-sm mx-auto">
       {!data.posts.length ? (
-        <div>{emptyLines[Math.floor(Math.random() * emptyLines.length)]}</div>
+        <div>{data.emptyLine}</div>
       ) : (
         <ol>
           {data.posts.map((post) => (
