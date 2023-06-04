@@ -1,4 +1,5 @@
 import { bundleMDX } from 'mdx-bundler'
+import * as shiki from 'shiki'
 import calculateReadingTime from 'reading-time'
 import type TPQueue from 'p-queue'
 import type { GitHubFile } from './github.server'
@@ -12,7 +13,13 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
     'rehype-autolink-headings'
   )
   const { default: rehypeSlug } = await import('rehype-slug')
+  const { default: rehypeShiki } = await import('@leafac/rehype-shiki')
   const { default: gfm } = await import('remark-gfm')
+
+  const darkHighlighter = await shiki.getHighlighter({ theme: 'vitesse-dark' })
+  const lightHighlighter = await shiki.getHighlighter({
+    theme: 'vitesse-light',
+  })
 
   const indexRegex = new RegExp(`${slug}\\/index.mdx?$`)
   const indexFile = githubFiles.find(({ path }) => indexRegex.test(path))
@@ -50,6 +57,15 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
                 ariaHidden: true,
                 tabIndex: -1,
                 className: 'header-anchor',
+              },
+            },
+          ],
+          [
+            rehypeShiki,
+            {
+              highlighter: {
+                dark: darkHighlighter,
+                light: lightHighlighter,
               },
             },
           ],
