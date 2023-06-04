@@ -39,7 +39,20 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
         options.rehypePlugins = [
           ...(options.rehypePlugins ?? []),
           rehypeSlug,
-          [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: 'append',
+              content: () => {
+                return { type: 'text', value: '#' }
+              },
+              properties: {
+                ariaHidden: true,
+                tabIndex: -1,
+                className: 'header-anchor',
+              },
+            },
+          ],
         ]
         return options
       },
