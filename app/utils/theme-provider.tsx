@@ -59,7 +59,7 @@ function ThemeProvider({
       return
     }
 
-    fetch('action/set-theme', {
+    fetch('/action/set-theme', {
       method: 'post',
       body: new URLSearchParams({ theme }),
     })
