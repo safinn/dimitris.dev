@@ -13,6 +13,9 @@ html:not(.dark) .rehype-shiki .dark {
   margin: 0.5em 0;
 }
 
+.prose pre > code {
+  display: grid;
+}
 .prose pre {
   color: #e5e7eb;
   overflow-x: auto;

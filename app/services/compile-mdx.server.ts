@@ -13,13 +13,8 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
     'rehype-autolink-headings'
   )
   const { default: rehypeSlug } = await import('rehype-slug')
-  const { default: rehypeShiki } = await import('@leafac/rehype-shiki')
+  const { default: rehypePrettyCode } = await import('rehype-pretty-code')
   const { default: gfm } = await import('remark-gfm')
-
-  const darkHighlighter = await shiki.getHighlighter({ theme: 'vitesse-dark' })
-  const lightHighlighter = await shiki.getHighlighter({
-    theme: 'vitesse-light',
-  })
 
   const indexRegex = new RegExp(`${slug}\\/index.mdx?$`)
   const indexFile = githubFiles.find(({ path }) => indexRegex.test(path))
@@ -61,11 +56,11 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
             },
           ],
           [
-            rehypeShiki,
+            rehypePrettyCode,
             {
-              highlighter: {
-                dark: darkHighlighter,
-                light: lightHighlighter,
+              theme: {
+                dark: 'vitesse-dark',
+                light: 'vitesse-light',
               },
             },
           ],
