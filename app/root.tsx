@@ -68,7 +68,7 @@ function App() {
         <Links />
         <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
       </head>
-      <body className="bg-zinc-200 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 selection:bg-[#8884]">
+      <body className="bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 selection:bg-[#8884]">
         <Header />
         <main className="py-8 px-6">
           <Outlet />
