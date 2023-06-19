@@ -7,6 +7,7 @@ export default function ToggleTheme() {
 
   const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
     const isAppearanceTransition =
+      // @ts-expect-error experimental API
       document.startViewTransition &&
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -24,6 +25,7 @@ export default function ToggleTheme() {
       Math.max(y, innerHeight - y)
     )
 
+    // @ts-expect-error experimental API
     const transition = document.startViewTransition(() => {
       flushSync(() => {
         setTheme((prevTheme) =>
