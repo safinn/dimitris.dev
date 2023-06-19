@@ -1,12 +1,56 @@
+import { MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
 import { Theme, useTheme } from '~/utils/theme-provider'
 
 export default function ToggleTheme() {
   const [theme, setTheme] = useTheme()
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) =>
-      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
+    const isAppearanceTransition =
+      document.startViewTransition &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (!isAppearanceTransition) {
+      setTheme((prevTheme) =>
+        prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+      )
+      return
+    }
+
+    const x = event.clientX
+    const y = event.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y)
     )
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setTheme((prevTheme) =>
+          prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+        )
+      })
+    })
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+      document.documentElement.animate(
+        {
+          clipPath: theme === Theme.DARK ? [...clipPath].reverse() : clipPath,
+        },
+        {
+          duration: 400,
+          easing: 'ease-out',
+          pseudoElement:
+            theme === Theme.DARK
+              ? '::view-transition-old(root)'
+              : '::view-transition-new(root)',
+        }
+      )
+    })
   }
 
   return (
