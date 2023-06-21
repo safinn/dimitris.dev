@@ -35,16 +35,17 @@ export default function ToggleTheme() {
     })
 
     transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ]
+      // const clipPath = [
+      //   `circle(0px at ${x}px ${y}px)`,
+      //   `circle(${endRadius}px at ${x}px ${y}px)`,
+      // ]
+      const clipPath = [`inset(0 100% 0 0)`, `inset(0)`]
       document.documentElement.animate(
         {
           clipPath: theme === Theme.DARK ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 400,
+          duration: 300,
           easing: 'ease-out',
           pseudoElement:
             theme === Theme.DARK
