@@ -1,10 +1,14 @@
 import * as fs from 'node:fs'
+import crypto from 'node:crypto'
 import chokidar from 'chokidar'
 import express from 'express'
 import compression from 'compression'
 import morgan from 'morgan'
+import helmet from 'helmet'
 import { createRequestHandler } from '@remix-run/express'
 import { broadcastDevReady, installGlobals } from '@remix-run/node'
+
+const MODE = process.env.NODE_ENV
 
 import * as build from './build/index.js'
 
@@ -15,9 +19,6 @@ installGlobals()
 const app = express()
 
 app.use(compression())
-
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable('x-powered-by')
 
 // Remix fingerprints its assets so we can cache forever.
 app.use(
@@ -41,6 +42,22 @@ app.use(express.static('public', { immutable: true, maxAge: '1y' }))
 
 app.use(morgan('tiny'))
 
+app.use((req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
+  next()
+})
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        connectSrc: MODE === 'development' ? ['ws:', "'self'"] : null,
+        scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+      },
+    },
+  })
+)
+
 app.all(
   '*',
   process.env.NODE_ENV === 'development'
@@ -48,6 +65,7 @@ app.all(
     : createRequestHandler({
         build,
         mode: process.env.NODE_ENV,
+        getLoadContext,
       })
 )
 
@@ -83,9 +101,14 @@ function createDevRequestHandler() {
       return createRequestHandler({
         build: await devBuild,
         mode: 'development',
+        getLoadContext,
       })(req, res, next)
     } catch (error) {
       next(error)
     }
   }
+}
+
+function getLoadContext(req, res) {
+  return { cspNonce: res.locals.cspNonce }
 }

@@ -98,11 +98,20 @@ const clientThemeCode = `
 })();
 `
 
-function NonFlashOfWrongThemeEls({ ssrTheme }: { ssrTheme: boolean }) {
+function NonFlashOfWrongThemeEls({
+  nonce,
+  ssrTheme,
+}: {
+  nonce?: string
+  ssrTheme: boolean
+}) {
   return (
     <>
       {ssrTheme ? null : (
-        <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} />
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: clientThemeCode }}
+        />
       )}
     </>
   )
