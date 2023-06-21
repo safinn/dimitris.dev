@@ -94,7 +94,6 @@ function handleBrowserRequest(
   loadContext: AppLoadContext
 ) {
   const nonce = loadContext.cspNonce ? String(loadContext.cspNonce) : undefined
-  console.log('nonce', nonce)
   return new Promise((resolve, reject) => {
     const { pipe, abort } = renderToPipeableStream(
       <NonceProvider value={nonce}>
