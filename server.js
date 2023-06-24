@@ -52,7 +52,11 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         connectSrc: MODE === 'development' ? ['ws:', "'self'"] : null,
-        scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-eval'",
+          (req, res) => `'nonce-${res.locals.cspNonce}'`,
+        ],
       },
     },
   })
