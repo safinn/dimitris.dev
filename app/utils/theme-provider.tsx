@@ -49,13 +49,6 @@ function ThemeProvider({
     return getPreferredTheme()
   })
 
-  const persistTheme = useFetcher()
-  // TODO: remove this when persistTheme is memoized properly
-  const persistThemeRef = useRef(persistTheme)
-  useEffect(() => {
-    persistThemeRef.current = persistTheme
-  }, [persistTheme])
-
   const mountRun = useRef(false)
 
   useEffect(() => {
@@ -67,10 +60,10 @@ function ThemeProvider({
       return
     }
 
-    persistThemeRef.current.submit(
-      { theme },
-      { action: 'action/set-theme', method: 'post' }
-    )
+    fetch('/action/set-theme', {
+      method: 'post',
+      body: new URLSearchParams({ theme }),
+    })
   }, [theme])
 
   useEffect(() => {
