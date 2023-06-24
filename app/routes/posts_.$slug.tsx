@@ -1,9 +1,16 @@
 import type { LinksFunction, LoaderArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { V2_MetaFunction, useLoaderData } from '@remix-run/react'
 import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
+
+export const meta: V2_MetaFunction = ({ data }) => {
+  return [
+    { title: data.page.frontmatter.title },
+    { name: 'description', content: data.page.frontmatter.description },
+  ]
+}
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 

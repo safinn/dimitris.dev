@@ -1,7 +1,14 @@
 import type { LoaderArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, V2_MetaFunction, useLoaderData } from '@remix-run/react'
 import type { MdxListItem } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: 'Blog - Dimitris Karittevlis' },
+    { name: 'description', content: "Dimitris Karittevlis' blog post list" },
+  ]
+}
 
 export const loader = async ({ request }: LoaderArgs) => {
   const posts = await getBlogMdxListItems()
