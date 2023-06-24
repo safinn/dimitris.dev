@@ -52,7 +52,12 @@ function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="author" content="Dimitris Karittevlis" />
-        <link rel="preload" href="sprite.svg" as="image" />
+        <link
+          rel="preload"
+          href="sprite.svg"
+          as="image"
+          crossOrigin="anonymous"
+        />
         <link
           rel="preload"
           href="/Inter-roman.var.woff2"
