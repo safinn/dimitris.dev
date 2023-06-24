@@ -10,7 +10,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import clsx from 'clsx'
-import type { Theme } from '~/utils/theme-provider'
+import { Theme, ThemeBody } from '~/utils/theme-provider'
 import {
   NonFlashOfWrongThemeEls,
   ThemeProvider,
@@ -76,6 +76,7 @@ function App() {
         <main className="py-8 px-6">
           <Outlet />
         </main>
+        <ThemeBody nonce={nonce} ssrTheme={Boolean(data.theme)} />
         <Footer />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />

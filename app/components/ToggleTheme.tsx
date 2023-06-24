@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react'
 import { flushSync } from 'react-dom'
-import { Theme, useTheme } from '~/utils/theme-provider'
+import { Theme, Themed, useTheme } from '~/utils/theme-provider'
 import Icon, { Icons } from './Icon'
 
 export default function ToggleTheme() {
@@ -63,11 +63,10 @@ export default function ToggleTheme() {
       aria-label="Theme mode toggle"
       onClick={toggleTheme}
     >
-      {theme === Theme.LIGHT ? (
-        <Icon id={Icons.Sun} width="1.2em" height="1.2em" />
-      ) : (
-        <Icon id={Icons.Moon} width="1.2em" height="1.2em" />
-      )}
+      <Themed
+        dark={<Icon id={Icons.Moon} width="1.2em" height="1.2em" />}
+        light={<Icon id={Icons.Sun} width="1.2em" height="1.2em" />}
+      />
     </button>
   )
 }
