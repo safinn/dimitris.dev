@@ -2,6 +2,7 @@ import { json, redirect, type DataFunctionArgs } from '@remix-run/node'
 import { getInstanceInfo, getInternalInstanceDomain } from 'litefs-js'
 import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
+import { logger } from '~/services/log.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
@@ -16,7 +17,7 @@ export async function action({ request }: DataFunctionArgs) {
   const isAuthorized =
     request.headers.get('Authorization') === `Bearer ${INTERNAL_COMMAND_TOKEN}`
   if (!isAuthorized) {
-    console.log(
+    logger.warn(
       `Unauthorized request to ${request.url}, redirecting to solid tunes 🎶`
     )
     // rick roll them
@@ -24,10 +25,10 @@ export async function action({ request }: DataFunctionArgs) {
   }
   const { key, cacheValue } = await request.json()
   if (cacheValue === undefined) {
-    console.log(`Deleting ${key} from the cache from remote`)
+    logger.info(`Deleting ${key} from the cache from remote`)
     await cache.delete(key)
   } else {
-    console.log(`Setting ${key} in the cache from remote`)
+    logger.info(`Setting ${key} in the cache from remote`)
     await cache.set(key, cacheValue)
   }
   return json({ success: true })
