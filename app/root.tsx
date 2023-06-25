@@ -52,10 +52,10 @@ function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="author" content="Dimitris Karittevlis" />
-        <link rel="icon" href="/favicon.ico?v=2" />
+        <link rel="icon" href="/favicon.ico?v=3" />
         <link
           rel="preload"
-          href="/sprite.svg?v=2"
+          href="/sprite.svg?v=3"
           as="image"
           crossOrigin="anonymous"
         />
