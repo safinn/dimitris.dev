@@ -1,6 +1,7 @@
 import { json, redirect, type DataFunctionArgs } from '@remix-run/node'
 import path from 'path'
 import invariant from 'tiny-invariant'
+import { ensurePrimary } from 'litefs-js/dist/remix.js'
 import { cache } from '~/services/cache.server'
 import { getBlogMdxListItems, getMdxPage } from '~/services/mdx.server'
 
@@ -27,6 +28,8 @@ export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
 export const commitShaKey = 'meta:last-refresh-commit-sha'
 
 export async function action({ request }: DataFunctionArgs) {
+  await ensurePrimary()
+
   const { REFRESH_CACHE_SECRET } = process.env
   invariant(REFRESH_CACHE_SECRET, 'REFRESH_CACHE_SECRET must be set')
   // Everything in this function is fire and forget, so we don't need to await

@@ -47,15 +47,28 @@ RUN pnpm prune --prod
 # Final stage for app image
 FROM base
 
+# Install, configure litefs
+COPY --from=flyio/litefs:0.4.0 /usr/local/bin/litefs /usr/local/bin/litefs
+COPY --link other/litefs.yml /etc/litefs.yml
+
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y ca-certificates fuse3 && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Copy built application
 COPY --from=build /app /app
 
 # Setup volume for sqlite3
-RUN mkdir -p /data
+RUN mkdir -p /data /litefs
 VOLUME /data
 
 # Setup envs for sqlite3
-ENV CACHE_DATABASE_PATH="/data/cache.db"
+ENV LITEFS_DIR="/litefs"
+ENV CACHE_DATABASE_PATH="$LITEFS_DIR/cache.db"
+ENV PORT=3001
+
+ENTRYPOINT ["litefs", "mount", "--"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000

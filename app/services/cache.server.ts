@@ -2,6 +2,8 @@ import Database from 'better-sqlite3'
 import invariant from 'tiny-invariant'
 import { logger } from './log.server'
 import type { CacheEntry } from 'cachified'
+import { getInstanceInfo, getInstanceInfoSync } from 'litefs-js'
+import { updatePrimaryCacheValue } from '~/routes/action.cache'
 
 const cacheDb = createDatabase()
 
@@ -10,6 +12,11 @@ function createDatabase() {
   invariant(CACHE_DATABASE_PATH, 'CACHE_DATABASE_PATH must be set')
 
   const db = new Database(CACHE_DATABASE_PATH)
+
+  db.pragma('journal_mode = WAL')
+
+  const { currentIsPrimary } = getInstanceInfoSync()
+  if (!currentIsPrimary) return db
 
   try {
     // create cache table with metadata JSON column and value JSON column if it does not exist already
@@ -41,18 +48,51 @@ export const cache = {
       value: JSON.parse(result.value),
     }
   },
-  set(key: string, entry: CacheEntry) {
-    cacheDb
-      .prepare(
-        'INSERT OR REPLACE INTO cache (key, value, metadata) VALUES (@key, @value, @metadata)'
-      )
-      .run({
+  async set(key: string, entry: CacheEntry) {
+    const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
+
+    if (currentIsPrimary) {
+      cacheDb
+        .prepare(
+          'INSERT OR REPLACE INTO cache (key, value, metadata) VALUES (@key, @value, @metadata)'
+        )
+        .run({
+          key,
+          value: JSON.stringify(entry.value),
+          metadata: JSON.stringify(entry.metadata),
+        })
+    } else {
+      // fire-and-forget cache update
+      void updatePrimaryCacheValue({
         key,
-        value: JSON.stringify(entry.value),
-        metadata: JSON.stringify(entry.metadata),
+        cacheValue: entry,
+      }).then((response) => {
+        if (!response.ok) {
+          logger.error(
+            `Error updating cache value for key "${key}" on primary instance (${primaryInstance}): ${response.status} ${response.statusText}`,
+            { entry }
+          )
+        }
       })
+    }
   },
-  delete(key: string) {
-    cacheDb.prepare('DELETE FROM cache WHERE key = ?').run(key)
+  async delete(key: string) {
+    const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
+
+    if (currentIsPrimary) {
+      cacheDb.prepare('DELETE FROM cache WHERE key = ?').run(key)
+    } else {
+      // fire-and-forget cache update
+      void updatePrimaryCacheValue({
+        key,
+        cacheValue: undefined,
+      }).then((response) => {
+        if (!response.ok) {
+          logger.error(
+            `Error deleting cache value for key "${key}" on primary instance (${primaryInstance}): ${response.status} ${response.statusText}`
+          )
+        }
+      })
+    }
   },
 }
