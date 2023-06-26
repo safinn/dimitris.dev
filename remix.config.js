@@ -8,7 +8,7 @@ export default {
   serverModuleFormat: 'esm',
   tailwind: true,
   future: {
-    unstable_dev: true,
+    v2_dev: true,
     v2_errorBoundary: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,
