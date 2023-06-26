@@ -14,7 +14,7 @@ export default function Icon({
 }: { id: Icons } & SVGProps<SVGSVGElement>) {
   return (
     <svg {...props}>
-      <use href={`/sprite.svg?v=2#${id}`} />
+      <use href={`/sprite.svg?v=3#${id}`} />
     </svg>
   )
 }
