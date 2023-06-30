@@ -5,7 +5,7 @@ import type { CacheEntry } from 'cachified'
 import { getInstanceInfo, getInstanceInfoSync } from 'litefs-js'
 import { updatePrimaryCacheValue } from '~/routes/action.cache'
 
-const cacheDb = createDatabase()
+export const cacheDb = createDatabase()
 
 function createDatabase() {
   const { CACHE_DATABASE_PATH } = process.env
@@ -26,6 +26,19 @@ function createDatabase() {
         metadata TEXT,
         value TEXT
       )
+    `)
+
+    // create views table
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS views (
+        id TEXT PRIMARY KEY,
+        createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        clientId TEXT NOT NULL,
+        slug TEXT NOT NULL
+      );
+
+      CREATE INDEX IF NOT EXISTS "views_slug_idx" ON "views"("slug");
+      CREATE INDEX IF NOT EXISTS "views_clientId_slug_idx" ON "views"("clientId", "slug");
     `)
   } catch (error) {
     logger.error(`failed creating cache db at ${CACHE_DATABASE_PATH}`)

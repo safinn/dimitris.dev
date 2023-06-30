@@ -1,5 +1,4 @@
 import { bundleMDX } from 'mdx-bundler'
-import * as shiki from 'shiki'
 import calculateReadingTime from 'reading-time'
 import type TPQueue from 'p-queue'
 import type { GitHubFile } from './github.server'

@@ -1,9 +1,16 @@
-import type { LinksFunction, LoaderArgs } from '@remix-run/node'
+import type {
+  DataFunctionArgs,
+  LinksFunction,
+  LoaderArgs,
+} from '@remix-run/node'
+import { useCallback, useEffect, useRef } from 'react'
 import { json } from '@remix-run/node'
-import { V2_MetaFunction, useLoaderData } from '@remix-run/react'
+import { V2_MetaFunction, useFetcher, useLoaderData } from '@remix-run/react'
 import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
+import { getClientSession } from '~/utils/client.server'
+import { addView } from '~/services/db.server'
 
 export const meta: V2_MetaFunction = ({ data }) => {
   return [
@@ -14,6 +21,29 @@ export const meta: V2_MetaFunction = ({ data }) => {
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
+export async function action({ params, request }: DataFunctionArgs) {
+  if (!params.slug) {
+    throw new Error('params.slug is not defined')
+  }
+
+  const formData = await request.formData()
+  const intent = formData.get('intent')
+
+  switch (intent) {
+    case 'mark-as-read': {
+      const { slug } = params
+      const { clientId, headers } = await getClientSession(request)
+
+      await addView(clientId, `/posts/${slug}`)
+
+      return json({ success: true }, { headers })
+    }
+    default: {
+      throw new Error(`Unknown intent: ${intent}`)
+    }
+  }
+}
+
 export const loader = async ({ request, params }: LoaderArgs) => {
   if (!params.slug) {
     throw new Error('params.slug is not defined')
@@ -23,13 +53,44 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   if (!page) throw json({}, { status: 404 })
 
-  return { page }
+  return json({ page })
+}
+
+function useOnView({
+  time,
+  onRead,
+}: {
+  time: number | undefined
+  onRead: () => void
+}) {
+  useEffect(() => {
+    onRead()
+  }, [time, onRead])
 }
 
 export default function Post() {
   const data = useLoaderData<typeof loader>()
   const { code, dateDisplay, frontmatter, readTime } = data.page
   const Component = useMdxComponent(code)
+
+  const markAsRead = useFetcher()
+  const markAsReadRef = useRef(markAsRead)
+  useEffect(() => {
+    markAsReadRef.current = markAsRead
+  }, [markAsRead])
+
+  const isDraft = Boolean(data.page.frontmatter.draft)
+
+  useOnView({
+    time: data.page.readTime?.time,
+    onRead: useCallback(() => {
+      if (isDraft) return
+      markAsReadRef.current.submit(
+        { intent: 'mark-as-read' },
+        { method: 'POST' }
+      )
+    }, [isDraft]),
+  })
 
   return (
     <>

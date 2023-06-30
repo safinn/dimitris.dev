@@ -25,7 +25,8 @@ async function getThemeSession(request: Request) {
       return isTheme(themeValue) ? themeValue : null
     },
     setTheme: (theme: Theme) => session.set('theme', theme),
-    commit: () => themeStorage.commitSession(session),
+    commit: () =>
+      themeStorage.commitSession(session, { expires: new Date('2093-06-13') }),
   }
 }
 
