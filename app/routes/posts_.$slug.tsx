@@ -30,7 +30,7 @@ export async function action({ params, request }: DataFunctionArgs) {
   const intent = formData.get('intent')
 
   switch (intent) {
-    case 'mark-as-read': {
+    case 'mark-as-view': {
       const { slug } = params
       const { clientId, headers } = await getClientSession(request)
 
@@ -58,14 +58,14 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 function useOnView({
   time,
-  onRead,
+  onView,
 }: {
   time: number | undefined
-  onRead: () => void
+  onView: () => void
 }) {
   useEffect(() => {
-    onRead()
-  }, [time, onRead])
+    onView()
+  }, [time, onView])
 }
 
 export default function Post() {
@@ -83,10 +83,10 @@ export default function Post() {
 
   useOnView({
     time: data.page.readTime?.time,
-    onRead: useCallback(() => {
+    onView: useCallback(() => {
       if (isDraft) return
       markAsReadRef.current.submit(
-        { intent: 'mark-as-read' },
+        { intent: 'mark-as-view' },
         { method: 'POST' }
       )
     }, [isDraft]),
