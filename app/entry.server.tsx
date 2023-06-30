@@ -12,6 +12,7 @@ import { RemixServer } from '@remix-run/react'
 import isbot from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
 import { NonceProvider } from './utils/nonce-provider'
+import { logger } from './services/log.server'
 
 const ABORT_DELAY = 5_000
 
@@ -77,7 +78,7 @@ function handleBotRequest(
         },
         onError(error: unknown) {
           responseStatusCode = 500
-          console.error(error)
+          logger.error(error)
         },
       }
     )
@@ -123,7 +124,7 @@ function handleBrowserRequest(
           reject(error)
         },
         onError(error: unknown) {
-          console.error(error)
+          logger.error(error)
           responseStatusCode = 500
         },
       }

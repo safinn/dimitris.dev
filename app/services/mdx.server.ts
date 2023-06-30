@@ -5,6 +5,7 @@ import { cache } from './cache.server'
 import type { GitHubFile } from './github.server'
 import { downloadDirList, downloadMdxFileOrDirectory } from './github.server'
 import { compileMdx } from './compile-mdx.server'
+import { logger } from './log.server'
 
 const defaultTTL = 1000 * 60 * 60 * 24 * 14 // 14 days
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30 // 30 days
@@ -285,7 +286,7 @@ export async function getMdxPage(
         ...pageFiles,
         options,
       }).catch((err) => {
-        console.error(`Failed to get a fresh value for mdx:`, {
+        logger.error(`Failed to get a fresh value for mdx:`, {
           contentDir,
           slug,
         })

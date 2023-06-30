@@ -22,7 +22,6 @@ export async function getClientSession(request: Request) {
   let headers: Headers | undefined
 
   // generate client id and create header object if client id does not already exist
-  console.log(clientId)
   if (!clientId) {
     clientId = uuidv4()
     session.set('clientId', clientId)
