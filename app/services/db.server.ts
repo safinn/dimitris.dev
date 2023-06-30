@@ -19,6 +19,12 @@ export function addView(clientId: string, slug: string) {
 
 export function getAllViewsBySlug() {
   return cacheDb
-    .prepare('SELECT slug, COUNT(id) FROM views GROUP BY slug')
-    .all()
+    .prepare('SELECT slug, COUNT(id) AS views FROM views GROUP BY slug')
+    .all() as { slug: string; views: number }[]
+}
+
+export function getViewsForSlug(slug: string) {
+  return cacheDb
+    .prepare('SELECT slug, COUNT(id) AS views FROM views WHERE slug = ?')
+    .get(slug) as { slug: string; views: number }
 }

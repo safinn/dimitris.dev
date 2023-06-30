@@ -6,6 +6,7 @@ import type { GitHubFile } from './github.server'
 import { downloadDirList, downloadMdxFileOrDirectory } from './github.server'
 import { compileMdx } from './compile-mdx.server'
 import { logger } from './log.server'
+import { getAllViewsBySlug, getViewsForSlug } from './db.server'
 
 const defaultTTL = 1000 * 60 * 60 * 24 * 14 // 14 days
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30 // 30 days
@@ -174,11 +175,15 @@ function mapFromMdxPageToMdxListItem(page: MdxPage): MdxListItem {
   return mdxListItem
 }
 
+export type MdxListItemViews = MdxListItem & { views: number }
+
 export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
   const { forceFresh = false, ttl = defaultTTL } = options || {}
   const key = 'posts:mdx-list-items'
 
-  return cachified({
+  const allViews = getAllViewsBySlug()
+
+  const blogMdxListItems = await cachified({
     key,
     cache,
     forceFresh,
@@ -201,6 +206,21 @@ export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
 
       return pages.map(mapFromMdxPageToMdxListItem)
     },
+  })
+
+  const allViewsBySlug = allViews.reduce(
+    (obj: { [key: string]: number }, view) => {
+      obj[view.slug] = view.views
+      return obj
+    },
+    {}
+  )
+
+  return blogMdxListItems.map((item) => {
+    return {
+      ...item,
+      views: allViewsBySlug[`/posts/${item.slug}`] || 0,
+    }
   })
 }
 
@@ -259,6 +279,8 @@ async function compileMdxCached({
   return page
 }
 
+export type MdxPageViews = MdxPage & { views: number }
+
 export async function getMdxPage(
   {
     contentDir,
@@ -268,7 +290,7 @@ export async function getMdxPage(
     slug: string
   },
   options?: OptionalCachifiedOptions
-): Promise<MdxPage | null> {
+): Promise<MdxPageViews | null> {
   const { forceFresh, ttl = defaultTTL } = options || {}
   const key = `mdx-page:${contentDir}:${slug}:compiled`
   const page = await cachified({
@@ -298,6 +320,9 @@ export async function getMdxPage(
   if (!page) {
     // if there's no page, let's remove it from the cache
     void cache.delete(key)
+    return page
+  } else {
+    const viewsForSlug = getViewsForSlug(`/posts/${slug}`) || 0
+    return { ...page, views: viewsForSlug.views }
   }
-  return page
 }

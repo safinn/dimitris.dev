@@ -10,7 +10,7 @@ import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
 import { getClientSession } from '~/utils/client.server'
-import { addView } from '~/services/db.server'
+import { addView, getViewsForSlug } from '~/services/db.server'
 
 export const meta: V2_MetaFunction = ({ data }) => {
   return [
@@ -70,7 +70,7 @@ function useOnView({
 
 export default function Post() {
   const data = useLoaderData<typeof loader>()
-  const { code, dateDisplay, frontmatter, readTime } = data.page
+  const { code, dateDisplay, frontmatter, readTime, views } = data.page
   const Component = useMdxComponent(code)
 
   const markAsRead = useFetcher()
@@ -101,6 +101,7 @@ export default function Post() {
         <div className="mt-2">
           {dateDisplay}
           {readTime ? ` · ${readTime.text}` : ''}
+          {` · ${views}`}
         </div>
       </header>
       <article className="max-w-screen-sm mx-auto prose">

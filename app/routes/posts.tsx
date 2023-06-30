@@ -1,6 +1,6 @@
 import type { LoaderArgs } from '@remix-run/node'
 import { Link, V2_MetaFunction, useLoaderData } from '@remix-run/react'
-import type { MdxListItem } from '~/services/mdx.server'
+import type { MdxListItemViews } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
 
 export const meta: V2_MetaFunction = () => {
@@ -45,7 +45,7 @@ export default function Posts() {
   )
 }
 
-function PostItem({ post }: { post: MdxListItem }) {
+function PostItem({ post }: { post: MdxListItemViews }) {
   return (
     <li className="flex space-x-2 items-center">
       {(post.frontmatter.draft || post.frontmatter.unlisted) && (
@@ -53,7 +53,9 @@ function PostItem({ post }: { post: MdxListItem }) {
           {post.frontmatter.draft ? 'Draft' : 'Unlisted'}
         </span>
       )}
-      <Link to={post.slug}>{post.frontmatter.title}</Link>
+      <Link to={post.slug}>
+        {post.frontmatter.title} {post.views}
+      </Link>
     </li>
   )
 }
