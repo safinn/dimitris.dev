@@ -34,7 +34,7 @@ export async function action({ params, request }: DataFunctionArgs) {
       const { slug } = params
       const { clientId, headers } = await getClientSession(request)
 
-      await addView(clientId, `/posts/${slug}`)
+      addView(clientId, `/posts/${slug}`)
 
       return json({ success: true }, { headers })
     }

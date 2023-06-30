@@ -22,7 +22,7 @@ function createDatabase() {
     // create cache table with metadata JSON column and value JSON column if it does not exist already
     db.exec(`
       CREATE TABLE IF NOT EXISTS cache (
-        key TEXT PRIMARY KEY,
+        key TEXT PRIMARY KEY NOT NULL,
         metadata TEXT,
         value TEXT
       )
@@ -31,7 +31,7 @@ function createDatabase() {
     // create views table
     db.exec(`
       CREATE TABLE IF NOT EXISTS views (
-        id TEXT PRIMARY KEY,
+        id TEXT PRIMARY KEY NOT NULL,
         createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         clientId TEXT NOT NULL,
         slug TEXT NOT NULL
