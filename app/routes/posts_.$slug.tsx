@@ -119,7 +119,7 @@ export default function Post() {
         <div className="mt-2">
           {dateDisplay}
           {readTime ? ` · ${readTime.text}` : ''}
-          {` · ${views}`}
+          {` · ${views} ${views === 1 ? 'view' : 'views'}`}
         </div>
       </header>
       <article className="max-w-screen-sm mx-auto prose">

@@ -62,7 +62,8 @@ function PostItem({ post }: { post: MdxListItemViews }) {
         </span>
       )}
       <Link to={post.slug}>
-        {post.frontmatter.title} {post.views}
+        {post.frontmatter.title} {post.views}{' '}
+        {post.views === 1 ? 'view' : 'views'}
       </Link>
     </li>
   )
