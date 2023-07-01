@@ -3,10 +3,14 @@ import { Link, V2_MetaFunction, useLoaderData } from '@remix-run/react'
 import type { MdxListItemViews } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
 
-export const meta: V2_MetaFunction = () => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: 'Blog - Dimitris Karittevlis' },
     { name: 'description', content: "Dimitris Karittevlis' blog post list" },
+    {
+      property: 'og:image',
+      content: data?.ogImageUrl,
+    },
   ]
 }
 
@@ -24,7 +28,11 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const emptyLine = emptyLines[Math.floor(Math.random() * emptyLines.length)]
 
-  return { posts, emptyLine }
+  const ogImageTitle = encodeURIComponent('dimitris.dev Post List')
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+
+  return { posts, emptyLine, ogImageUrl }
 }
 
 export default function Posts() {

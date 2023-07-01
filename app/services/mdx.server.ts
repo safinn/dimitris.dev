@@ -150,11 +150,6 @@ type MdxPage = {
     // Post meta
     categories?: Array<string>
     date?: string
-    bannerBlurDataUrl?: string
-    bannerCloudinaryId?: string
-    bannerCredit?: string
-    bannerAlt?: string
-    bannerTitle?: string
     socialImageTitle?: string
     socialImagePreTitle?: string
     translations?: Array<{

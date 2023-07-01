@@ -1,10 +1,22 @@
+import { LoaderArgs } from '@remix-run/node'
 import type { V2_MetaFunction } from '@remix-run/react'
 
-export const meta: V2_MetaFunction = () => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: 'Dimitris Karittevlis' },
     { name: 'description', content: "Dimitris Karittevlis' Portfolio" },
+    {
+      property: 'og:image',
+      content: data?.ogImageUrl,
+    },
   ]
+}
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const ogImageTitle = encodeURIComponent("Hey I'm Dimitris, a Developer!")
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+  return { ogImageUrl }
 }
 
 export default function Index() {

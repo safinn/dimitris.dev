@@ -10,12 +10,23 @@ import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
 import { getClientSession } from '~/utils/client.server'
-import { addView, getViewsForSlug } from '~/services/db.server'
+import { addView } from '~/services/db.server'
 
-export const meta: V2_MetaFunction = ({ data }) => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  const ogTitle =
+    data?.page.frontmatter.socialImageTitle || data?.page.frontmatter.title
+
   return [
-    { title: data.page.frontmatter.title },
-    { name: 'description', content: data.page.frontmatter.description },
+    { title: data?.page.frontmatter.title },
+    { name: 'description', content: data?.page.frontmatter.description },
+    {
+      property: 'og:title',
+      content: ogTitle,
+    },
+    {
+      property: 'og:image',
+      content: data?.ogImageUrl,
+    },
   ]
 }
 
@@ -51,9 +62,16 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const page = await getMdxPage({ contentDir: 'posts', slug: params.slug })
 
-  if (!page) throw json({}, { status: 404 })
+  if (!page) {
+    return new Response('Not found', { status: 404 })
+  }
 
-  return json({ page })
+  const ogImageTitle = encodeURIComponent(
+    page.frontmatter.socialImageTitle || page.frontmatter.title || 'No Title!'
+  )
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+  return json({ page, ogImageUrl })
 }
 
 function useOnView({
