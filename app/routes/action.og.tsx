@@ -63,6 +63,8 @@ export const loader = async ({ request }: LoaderArgs) => {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'public, immutable, no-transform, max-age=604800',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
     },
   })
 }
