@@ -29,8 +29,9 @@ export const loader = async ({ request }: LoaderArgs) => {
   const emptyLine = emptyLines[Math.floor(Math.random() * emptyLines.length)]
 
   const ogImageTitle = encodeURIComponent('dimitris.dev Post List')
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+  const url = new URL(request.url)
+  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
+  const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
 
   return { posts, emptyLine, ogImageUrl }
 }

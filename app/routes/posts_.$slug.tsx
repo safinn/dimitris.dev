@@ -69,7 +69,8 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const ogImageTitle = encodeURIComponent(
     page.frontmatter.socialImageTitle || page.frontmatter.title || 'No Title!'
   )
-  const { origin } = new URL(request.url)
+  const url = new URL(request.url)
+  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
   const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
   return json({ page, ogImageUrl })
 }

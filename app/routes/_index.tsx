@@ -13,10 +13,10 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
-  console.log('requrl', request.url)
   const ogImageTitle = encodeURIComponent("Hey I'm Dimitris, a Developer!")
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+  const url = new URL(request.url)
+  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
+  const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
   return { ogImageUrl }
 }
 
