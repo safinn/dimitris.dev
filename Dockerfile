@@ -67,6 +67,10 @@ VOLUME /data
 ENV LITEFS_DIR="/litefs"
 ENV CACHE_DATABASE_PATH="$LITEFS_DIR/cache.db"
 ENV PORT=3001
+ENV NODE_ENV="production"
+
+# add shortcut for connecting to database CLI
+RUN echo "#!/bin/sh\nset -x\nsqlite3 \$CACHE_DATABASE_PATH" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
 
 ENTRYPOINT ["litefs", "mount", "--"]
 
