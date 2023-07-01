@@ -4,6 +4,7 @@ import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
 import { logger } from '~/services/log.server'
 
+// updates the cache value making sure it is done on the primary instance
 export async function action({ request }: DataFunctionArgs) {
   const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
   if (!currentIsPrimary) {
@@ -51,7 +52,7 @@ export async function updatePrimaryCacheValue({
   const { INTERNAL_COMMAND_TOKEN } = process.env
   invariant(INTERNAL_COMMAND_TOKEN, 'INTERNAL_COMMAND_TOKEN must be set')
 
-  return fetch(`${domain}/resources/cache/sqlite`, {
+  return fetch(`${domain}/action/cache`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${INTERNAL_COMMAND_TOKEN}`,
