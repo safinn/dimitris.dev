@@ -71,7 +71,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   )
   const url = new URL(request.url)
   if (process.env.NODE_ENV === 'production') url.protocol = 'https'
-  const ogImageUrl = `${origin}/action/og?title=${ogImageTitle}`
+  const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
   return json({ page, ogImageUrl })
 }
 
