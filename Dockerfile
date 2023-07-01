@@ -53,7 +53,7 @@ COPY --link other/litefs.yml /etc/litefs.yml
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y ca-certificates fuse3 && \
+    apt-get install --no-install-recommends -y ca-certificates fuse3 sqlite3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built application
