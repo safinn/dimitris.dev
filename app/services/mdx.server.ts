@@ -322,7 +322,7 @@ export async function getMdxPage(
     void cache.delete(key)
     return page
   } else {
-    const viewsForSlug = getViewsForSlug(`/posts/${slug}`) || 0
+    const viewsForSlug = getViewsForSlug(`/${contentDir}/${slug}`) || 0
     return { ...page, views: viewsForSlug.views }
   }
 }
