@@ -20,7 +20,7 @@ export const AnchorOrLink = React.forwardRef<
     )
   } else {
     return (
-      <Link to={href ?? ''} {...rest} ref={ref}>
+      <Link to={href ?? ''} {...rest} ref={ref} preventScrollReset={true}>
         {children}
       </Link>
     )

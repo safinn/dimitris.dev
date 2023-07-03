@@ -5,7 +5,12 @@ import type {
 } from '@remix-run/node'
 import { useCallback, useEffect, useRef } from 'react'
 import { json } from '@remix-run/node'
-import { V2_MetaFunction, useFetcher, useLoaderData } from '@remix-run/react'
+import {
+  V2_MetaFunction,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+} from '@remix-run/react'
 import { getMdxPage } from '~/services/mdx.server'
 import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
@@ -91,6 +96,17 @@ export default function Post() {
   const data = useLoaderData<typeof loader>()
   const { code, dateDisplay, frontmatter, readTime, views } = data.page
   const Component = useMdxComponent(code)
+  const location = useLocation()
+
+  // scroll to selected hash link on refresh
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash)
+      if (el) {
+        el.scrollIntoView()
+      }
+    }
+  }, [location])
 
   const markAsRead = useFetcher()
   const markAsReadRef = useRef(markAsRead)
