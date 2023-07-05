@@ -48,7 +48,7 @@ RUN pnpm prune --prod
 FROM base
 
 # Install, configure litefs
-COPY --from=flyio/litefs:0.4.0 /usr/local/bin/litefs /usr/local/bin/litefs
+COPY --from=flyio/litefs:0.5.1 /usr/local/bin/litefs /usr/local/bin/litefs
 COPY --link other/litefs.yml /etc/litefs.yml
 
 # Install packages needed for deployment
