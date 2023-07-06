@@ -1,0 +1,59 @@
+---
+title: Configuring a New Mac
+date: 2023-07-08
+draft: true
+categories: mac, tech
+---
+
+## System Preferences
+
+- Appearance -> Dark
+- Setup Touch ID
+- Dock
+  - Remove most applications from the Dock
+  - "Show recent applications in Dock" off
+  - "Show indicators for open applications" on
+- Disable Siri
+- Trackpad -> Scroll & Zoom -> Natural scrolling off
+- Keyboard
+  - Key repeat rate -> fast
+  - Delay until repeat -> short
+- Desktop & Dock -> Hot Corner Shortcuts -> all off
+
+## Dotfiles and Install Script
+
+Clone the dotfiles git repository into the users home directory:
+
+```sh
+git clone git@github.com:safinn/dotfiles.git ~/
+```
+
+Run the `install.sh` script:
+
+```sh
+sh ~/.dotfiles/install.sh
+```
+
+### SSH
+
+The script will first start the SSH agent for us and generate a new SSH key for our machine. The SSH key will be added to our `~/.ssh/config` file to be used against the host `github.com`. The private key is then added to the SSH agent and the public key copied into the clipboard. The script will wait until the key has been added to our GitHub SSH settings.
+
+### Brew
+
+packages are installed especially:
+
+- fnm to manage node versions
+- stow to allow managing out dotfiles
+
+casks (GUI application) are install:
+
+- 1password
+- brave browser
+- vs code (sync settings and extensions)
+- docker
+
+fnm install node
+
+any existing dotfiles that we are going to stow are removed the files from our cloned repo are stowed.
+
+some further mac settings are configured
