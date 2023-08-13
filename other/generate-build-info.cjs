@@ -5,18 +5,12 @@ const fs = require('fs')
 const fetch = require('node-fetch')
 
 const commit = process.env.COMMIT_SHA
-const authToken = process.env.BOT_GITHUB_TOKEN
 
 async function getCommit() {
   if (!commit) return `No COMMIT_SHA environment variable set.`
   try {
     const res = await fetch(
-      `https://api.github.com/repos/safinn/dimitris.dev/commits/${commit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      }
+      `https://api.github.com/repos/safinn/dimitris.dev/commits/${commit}`
     )
     const data = await res.json()
 

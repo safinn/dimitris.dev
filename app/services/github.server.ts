@@ -9,7 +9,6 @@ const ref = process.env.GITHUB_REF ?? 'main'
 const Octokit = createOctokit.plugin(throttling)
 
 const octokit = new Octokit({
-  auth: process.env.BOT_GITHUB_TOKEN,
   throttle: {
     onRateLimit: (retryAfter, options, octokit) => {
       const method = 'method' in options ? options.method : 'METHOD_UNKNOWN'
