@@ -1,7 +1,7 @@
 import { LoaderArgs } from '@remix-run/node'
-import type { V2_MetaFunction } from '@remix-run/react'
+import type { MetaFunction } from '@remix-run/react'
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: 'Dimitris Karittevlis' },
     { name: 'description', content: "Dimitris Karittevlis' Portfolio" },

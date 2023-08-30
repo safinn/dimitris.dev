@@ -6,7 +6,7 @@ import type {
 import { useCallback, useEffect, useRef } from 'react'
 import { json } from '@remix-run/node'
 import {
-  V2_MetaFunction,
+  MetaFunction,
   useFetcher,
   useLoaderData,
   useLocation,
@@ -17,7 +17,7 @@ import styles from '~/styles/prose.css'
 import { getClientSession } from '~/utils/client.server'
 import { addView } from '~/services/db.server'
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const ogTitle =
     data?.page.frontmatter.socialImageTitle || data?.page.frontmatter.title
 

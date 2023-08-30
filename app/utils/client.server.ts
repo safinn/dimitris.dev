@@ -19,19 +19,24 @@ const clientStorage = createCookieSessionStorage({
 export async function getClientSession(request: Request) {
   const session = await clientStorage.getSession(request.headers.get('Cookie'))
   let clientId = session.get('clientId') as string | undefined
-  let headers: Headers | undefined
+  let headers: Record<string, string> | undefined = undefined
 
   // generate client id and create header object if client id does not already exist
   if (!clientId) {
     clientId = uuidv4()
     session.set('clientId', clientId)
-    headers = new Headers()
-    headers.append(
-      'Set-Cookie',
-      await clientStorage.commitSession(session, {
+    // headers = new Headers()
+    // headers.append(
+    //   'Set-Cookie',
+    //   await clientStorage.commitSession(session, {
+    //     expires: new Date('2093-06-13'),
+    //   })
+    // )
+    headers = {
+      'Set-Cookie': await clientStorage.commitSession(session, {
         expires: new Date('2093-06-13'),
-      })
-    )
+      }),
+    }
   }
 
   return { clientId, headers }
