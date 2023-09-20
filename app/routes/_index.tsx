@@ -1,4 +1,4 @@
-import { LoaderArgs } from '@remix-run/node'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import type { MetaFunction } from '@remix-run/react'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -12,7 +12,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const ogImageTitle = encodeURIComponent("Hey I'm Dimitris, a Developer!")
   const url = new URL(request.url)
   if (process.env.NODE_ENV === 'production') url.protocol = 'https'

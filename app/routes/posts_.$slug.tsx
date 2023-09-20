@@ -1,7 +1,7 @@
 import type {
   DataFunctionArgs,
   LinksFunction,
-  LoaderArgs,
+  LoaderFunctionArgs,
 } from '@remix-run/node'
 import { useCallback, useEffect, useRef } from 'react'
 import { json } from '@remix-run/node'
@@ -60,7 +60,7 @@ export async function action({ params, request }: DataFunctionArgs) {
   }
 }
 
-export const loader = async ({ request, params }: LoaderArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (!params.slug) {
     throw new Error('params.slug is not defined')
   }

@@ -1,9 +1,9 @@
-import type { LoaderArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import satori from 'satori'
 import type { SatoriOptions } from 'satori'
 import { Resvg } from '@resvg/resvg-js'
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
   const title = url.searchParams.get('title')
 

@@ -1,4 +1,4 @@
-import { Headers, createCookieSessionStorage } from '@remix-run/node'
+import { createCookieSessionStorage } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 import { v4 as uuidv4 } from 'uuid'
 

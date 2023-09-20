@@ -1,4 +1,4 @@
-import type { LoaderArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, MetaFunction, useLoaderData } from '@remix-run/react'
 import type { MdxListItemViews } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
@@ -14,7 +14,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const posts = await getBlogMdxListItems()
 
   const emptyLines = [
