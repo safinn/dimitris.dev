@@ -5,14 +5,84 @@ draft: true
 categories: tools, tech
 ---
 
-# Getting Started With Mise
+## Getting Started With Mise
 
-The [mise demo](https://github.com/jdx/mise?tab=readme-ov-file#30-second-demo)
+#### Install
+
+```sh
+curl https://mise.run | sh # install
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc # activate
+# for other shells see details
+```
+
+*Make sure you restart your shell session after modifying your rc file in order for it to take effect*
 
 <details>
-<summary>Click to toggle contents of `code`</summary>
+<summary>Install details</summary>
 
-```
-CODE!
+The install script will download the binary to `~/.local/bin/mise`.
+Activating allows mise to add itself to the PATH and register a shell hook to run [mise hook-env](https://mise.jdx.dev/faq.html#what-does-mise-activate-do) every time the shell prompt is displayed.
+
+Adding mise activation in other shells:
+```sh
+echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
+echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
 ```
 </details>
+
+#### Install Global Tools
+
+```sh
+mise use -g node pnpm@9 go@latest
+```
+
+<details>
+<summary>Install global tools details</summary>
+
+`mise use` will install and activate the tools so it is available to use immediately. The `-g` flag globally installs tools so they are available anywhere they are not overwritten by "local" tools.
+
+We can run `go version` (and equivalent for the other tools) now and see we have the latest (at the time of writing) `go version go1.22.5 darwin/arm64`
+
+The global configuration is saved in `~/.config/mise/config.toml`.
+</details>
+
+#### Install Directory Tools
+
+```sh
+touch .mise.toml
+mise use node@20 # lts at the time
+mise use pnpm
+```
+
+<details>
+<summary>Install directory tools details</summary>
+
+Once we create a `.mise.toml` file in the root of our project we can use the same `mise use` (without the `-g` flag) commands to install tool specific for that project. This will update the current directory `.mise.toml` file configuration.
+
+Users who encounter an existing `.mise.toml` file simply run `mise install` to get all tools listed in the config with the correct versions.
+
+When not in our project directory, the global version of node (latest) will be used but when we `cd` into our project directory with `.mise.toml` node version 20 will be used. Try printing the version to see for yourself in different directories.
+
+Globally we might live on the edge and install the latest `node` version but for this specific project we are using the long-term support version.
+</details>
+
+#### Shims
+
+mise updates the PATH every time the shell prompt is displayed. In non-interactive use-cases where there is no shell prompt, the PATH is not updated. [Shims](https://mise.jdx.dev/dev-tools/shims.html) give us access to the mise tools in non-interactive environments.
+
+I use [starship](https://starship.rs/) as a shell prompt so I install it globally:
+```sh
+mise use -g starship
+```
+
+For starship to work, we need to initialise it by adding the following line to `~/.zshrc`
+```sh
+eval "$(starship init zsh)" # broken
+```
+
+But this will not work because `.zshrc` has ran in a non-interactive session (and no prompt displayed) and mise has not been able to add starship to the path. mise provides shims for the tools in `~/.local/share/mise/shims` so we can change our `.zshrc` command to use the mise starship shim and we are good to go.
+
+```sh
+eval "$(~/.local/share/mise/shims/starship init zsh)"
+```
