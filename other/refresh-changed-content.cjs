@@ -1,4 +1,4 @@
-import process from 'node:process'
+const process = require('node:process')
 
 // try to keep this dep-free so we don't have to install deps
 const { getChangedFiles, fetchJson } = require('./get-changed-files.cjs')
