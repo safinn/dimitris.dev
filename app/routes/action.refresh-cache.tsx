@@ -1,6 +1,7 @@
 import path from 'node:path'
 import process from 'node:process'
-import { type DataFunctionArgs, json, redirect } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { ensurePrimary } from 'litefs-js/dist/remix.js'
 import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
@@ -28,7 +29,7 @@ export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
 
 export const commitShaKey = 'meta:last-refresh-commit-sha'
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   await ensurePrimary()
 
   const { REFRESH_CACHE_SECRET } = process.env

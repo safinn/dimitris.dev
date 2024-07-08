@@ -1,7 +1,6 @@
 import process from 'node:process'
 import type {
-  DataFunctionArgs,
-  LinksFunction,
+  ActionFunctionArgs,
   LoaderFunctionArgs,
 } from '@remix-run/node'
 import { json } from '@remix-run/node'
@@ -32,7 +31,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export async function action({ params, request }: DataFunctionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
   if (!params.slug) {
     throw new Error('params.slug is not defined')
   }

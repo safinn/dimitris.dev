@@ -1,12 +1,13 @@
 import process from 'node:process'
-import { type DataFunctionArgs, json, redirect } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { getInstanceInfo, getInternalInstanceDomain } from 'litefs-js'
 import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
 import { logger } from '~/services/log.server'
 
 // updates the cache value making sure it is done on the primary instance
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
   if (!currentIsPrimary) {
     throw new Error(
