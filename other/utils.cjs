@@ -1,5 +1,5 @@
-import Buffer from 'node:buffer'
-import process from 'node:process'
+const Buffer = require('node:buffer').Buffer
+const process = require('node:process')
 
 const hostname = 'dimitris.dev'
 

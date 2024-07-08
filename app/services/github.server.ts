@@ -68,8 +68,8 @@ async function downloadFileBySha(sha: string) {
     file_sha: sha,
   })
   //                                lol
-  const encoding = data.encoding as Parameters<typeof Buffer.from>['1']
-  return Buffer.from(data.content, encoding).toString()
+  const encoding = data.encoding as Parameters<typeof Buffer.Buffer.from>['1']
+  return Buffer.Buffer.from(data.content, encoding).toString()
 }
 
 async function downloadFirstMdxFile(
