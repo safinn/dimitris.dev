@@ -10,7 +10,7 @@ import { useFetcher, useLoaderData, useLocation } from '@remix-run/react'
 import { useCallback, useEffect, useRef } from 'react'
 import { addView } from '~/services/db.server'
 import { getMdxPage } from '~/services/mdx.server'
-import styles from '~/styles/prose.css'
+import '~/styles/prose.css'
 import { getClientSession } from '~/utils/client.server'
 import { useMdxComponent } from '~/utils/mdx'
 
@@ -63,6 +63,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const page = await getMdxPage({ contentDir: 'posts', slug: params.slug })
+
+  console.log(page)
 
   if (!page) {
     return new Response('Not found', { status: 404 })
