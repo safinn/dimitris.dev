@@ -1,9 +1,9 @@
+import type { CacheEntry } from '@epic-web/cachified'
 import Database from 'better-sqlite3'
-import invariant from 'tiny-invariant'
-import { logger } from './log.server'
-import type { CacheEntry } from 'cachified'
 import { getInstanceInfo, getInstanceInfoSync } from 'litefs-js'
+import invariant from 'tiny-invariant'
 import { updatePrimaryCacheValue } from '~/routes/action.cache'
+import { logger } from './log.server'
 
 export const cacheDb = createDatabase()
 

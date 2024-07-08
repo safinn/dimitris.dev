@@ -6,12 +6,16 @@
 
 import { PassThrough } from 'node:stream'
 
-import { createReadableStreamFromReadable, type AppLoadContext, type EntryContext } from '@remix-run/node'
+import {
+  createReadableStreamFromReadable,
+  type AppLoadContext,
+  type EntryContext,
+} from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
-import isbot from 'isbot'
+import { isbot } from 'isbot'
 import { renderToPipeableStream } from 'react-dom/server'
-import { NonceProvider } from './utils/nonce-provider'
 import { logger } from './services/log.server'
+import { NonceProvider } from './utils/nonce-provider'
 
 const ABORT_DELAY = 5_000
 
@@ -20,7 +24,7 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
 ) {
   return isbot(request.headers.get('user-agent'))
     ? handleBotRequest(
@@ -28,14 +32,14 @@ export default function handleRequest(
         responseStatusCode,
         responseHeaders,
         remixContext,
-        loadContext
+        loadContext,
       )
     : handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
         remixContext,
-        loadContext
+        loadContext,
       )
 }
 
@@ -44,7 +48,7 @@ function handleBotRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
 ) {
   const nonce = loadContext.cspNonce ? String(loadContext.cspNonce) : undefined
   return new Promise((resolve, reject) => {
@@ -60,7 +64,7 @@ function handleBotRequest(
         nonce,
         onAllReady() {
           const body = new PassThrough()
-          const stream = createReadableStreamFromReadable(body);
+          const stream = createReadableStreamFromReadable(body)
 
           responseHeaders.set('Content-Type', 'text/html')
 
@@ -68,7 +72,7 @@ function handleBotRequest(
             new Response(stream, {
               headers: responseHeaders,
               status: responseStatusCode,
-            })
+            }),
           )
 
           pipe(body)
@@ -80,7 +84,7 @@ function handleBotRequest(
           responseStatusCode = 500
           logger.error(error)
         },
-      }
+      },
     )
 
     setTimeout(abort, ABORT_DELAY)
@@ -92,7 +96,7 @@ function handleBrowserRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
 ) {
   const nonce = loadContext.cspNonce ? String(loadContext.cspNonce) : undefined
   return new Promise((resolve, reject) => {
@@ -108,7 +112,7 @@ function handleBrowserRequest(
         nonce,
         onShellReady() {
           const body = new PassThrough()
-          const stream = createReadableStreamFromReadable(body);
+          const stream = createReadableStreamFromReadable(body)
 
           responseHeaders.set('Content-Type', 'text/html')
 
@@ -116,7 +120,7 @@ function handleBrowserRequest(
             new Response(stream, {
               headers: responseHeaders,
               status: responseStatusCode,
-            })
+            }),
           )
 
           pipe(body)
@@ -128,7 +132,7 @@ function handleBrowserRequest(
           logger.error(error)
           responseStatusCode = 500
         },
-      }
+      },
     )
 
     setTimeout(abort, ABORT_DELAY)

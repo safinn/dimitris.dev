@@ -1,20 +1,30 @@
-import * as fs from 'node:fs'
-import crypto from 'node:crypto'
-import chokidar from 'chokidar'
-import express from 'express'
-import compression from 'compression'
-import morgan from 'morgan'
-import helmet from 'helmet'
 import { createRequestHandler } from '@remix-run/express'
-import { broadcastDevReady, installGlobals } from '@remix-run/node'
+import compression from 'compression'
+import express from 'express'
+import helmet from 'helmet'
+import morgan from 'morgan'
+import crypto from 'node:crypto'
 
-const MODE = process.env.NODE_ENV
+const { NODE_ENV } = process.env
+const isDev = NODE_ENV === 'development'
+const isProd = NODE_ENV === 'production'
 
-import * as build from './build/index.js'
+const viteDevServer = isProd
+  ? undefined
+  : await import('vite').then((vite) =>
+      vite.createServer({
+        server: { middlewareMode: true },
+      }),
+    )
 
-const BUILD_PATH = './build/index.js'
-
-installGlobals()
+const remixHandler = createRequestHandler({
+  getLoadContext: (_, res) => ({
+    cspNonce: res.locals.cspNonce,
+  }),
+  build: viteDevServer
+    ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
+    : await import('./build/server/index.js'),
+})
 
 const app = express()
 
@@ -45,25 +55,31 @@ app.use((req, res, next) => {
 
 app.use(compression())
 
-// Remix fingerprints its assets so we can cache forever.
-app.use(
-  '/build',
-  express.static('public/build', {
-    immutable: true,
-    maxAge: '1y',
-    setHeaders(res, resourcePath) {
-      const relativePath = resourcePath.replace(`/app/public/build/`, '')
+// handle asset requests
+if (viteDevServer) {
+  app.use(viteDevServer.middlewares)
+} else {
+  // Vite fingerprints its assets so we can cache forever.
+  app.use(
+    '/assets',
+    express.static('build/client/assets', {
+      immutable: true,
+      maxAge: '1y',
+      setHeaders(res, resourcePath) {
+        const relativePath = resourcePath.replace(`/app/public/build/`, '')
 
-      if (relativePath.startsWith('info.json')) {
-        res.setHeader('cache-control', 'no-cache')
-        return
-      }
-    },
-  })
-)
+        if (relativePath.startsWith('info.json')) {
+          res.setHeader('cache-control', 'no-cache')
+          return
+        }
+      },
+    }),
+  )
+}
 
-// Everything else (like favicon.ico) is cached for 1 year.
-app.use(express.static('public', { immutable: true, maxAge: '1y' }))
+// Everything else (like favicon.ico) is cached for an hour. You may want to be
+// more aggressive with this caching.
+app.use(express.static('build/client', { maxAge: '24h' }))
 
 app.use(morgan('tiny'))
 
@@ -74,70 +90,27 @@ app.use((req, res, next) => {
 
 app.use(
   helmet({
+    xPoweredBy: null,
     contentSecurityPolicy: {
       directives: {
-        connectSrc: MODE === 'development' ? ['ws:', "'self'"] : null,
+        connectSrc: isDev ? ['ws:', "'self'"] : null,
         scriptSrc: [
           "'self'",
           "'unsafe-eval'",
+          isDev
+            ? "'sha256-gRR+6gJs/kocf3LfN3EZY9IiGF5Ahm9Zq8V6gmW7Yc8='"
+            : null,
           (req, res) => `'nonce-${res.locals.cspNonce}'`,
         ],
       },
     },
-  })
+  }),
 )
 
-app.all(
-  '*',
-  process.env.NODE_ENV === 'development'
-    ? createDevRequestHandler()
-    : createRequestHandler({
-        build,
-        mode: process.env.NODE_ENV,
-        getLoadContext,
-      })
-)
+// handle SSR requests
+app.all('*', remixHandler)
 
 const port = process.env.PORT || 3000
 app.listen(port, async () => {
   console.log(`Express server listening on port ${port}`)
-
-  if (process.env.NODE_ENV === 'development') {
-    broadcastDevReady(build)
-  }
 })
-
-function createDevRequestHandler() {
-  // initial build
-  /**
-   * @type { import('@remix-run/node').ServerBuild | Promise<import('@remix-run/node').ServerBuild> }
-   */
-  let devBuild = build
-
-  const watcher = chokidar.watch(BUILD_PATH, { ignoreInitial: true })
-
-  watcher.on('all', async () => {
-    // 1. purge require cache && load updated server build
-    const stat = fs.statSync(BUILD_PATH)
-    devBuild = import(BUILD_PATH + '?t=' + stat.mtimeMs)
-    // 2. tell dev server that this app server is now ready
-    broadcastDevReady(await devBuild)
-  })
-
-  return async (req, res, next) => {
-    try {
-      //
-      return createRequestHandler({
-        build: await devBuild,
-        mode: 'development',
-        getLoadContext,
-      })(req, res, next)
-    } catch (error) {
-      next(error)
-    }
-  }
-}
-
-function getLoadContext(req, res) {
-  return { cspNonce: res.locals.cspNonce }
-}

@@ -1,4 +1,5 @@
 import { SVGProps } from 'react'
+import spritesHref from '~/sprite.svg'
 
 export enum Icons {
   Logo = 'logo',
@@ -14,7 +15,7 @@ export default function Icon({
 }: { id: Icons } & SVGProps<SVGSVGElement>) {
   return (
     <svg {...props}>
-      <use href={`/sprite.svg?v=3#${id}`} />
+      <use href={`${spritesHref}#${id}`} />
     </svg>
   )
 }

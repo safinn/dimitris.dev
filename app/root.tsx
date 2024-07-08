@@ -1,4 +1,3 @@
-import { cssBundleHref } from '@remix-run/css-bundle'
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Links,
@@ -10,21 +9,28 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import clsx from 'clsx'
-import { Theme, ThemeBody } from '~/utils/theme-provider'
 import {
   NonFlashOfWrongThemeEls,
+  Theme,
+  ThemeBody,
   ThemeProvider,
   useTheme,
 } from '~/utils/theme-provider'
-import styles from './styles/tailwind.css'
-import { getThemeSession } from './utils/theme.server'
-import Header from './components/Header'
 import Footer from './components/Footer'
+import Header from './components/Header'
+import spritesHref from './sprite.svg'
+import './styles/tailwind.css'
+
 import { useNonce } from './utils/nonce-provider'
+import { getThemeSession } from './utils/theme.server'
 
 export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
-  { rel: 'stylesheet', href: styles },
+  {
+    rel: 'preload',
+    href: spritesHref,
+    as: 'image',
+    type: 'image/svg+xml',
+  },
 ]
 
 export type LoaderData = {
@@ -53,12 +59,6 @@ function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta name="author" content="Dimitris Karittevlis" />
         <link rel="icon" href="/favicon.ico?v=3" />
-        <link
-          rel="preload"
-          href="/sprite.svg?v=3"
-          as="image"
-          crossOrigin="anonymous"
-        />
         <link
           rel="preload"
           href="/Inter-roman.var.woff2"
