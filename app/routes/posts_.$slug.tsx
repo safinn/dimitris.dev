@@ -61,8 +61,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const page = await getMdxPage({ contentDir: 'posts', slug: params.slug })
 
-  console.log(page)
-
   if (!page) {
     return new Response('Not found', { status: 404 })
   }
