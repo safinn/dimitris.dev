@@ -84,7 +84,10 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
 
 function arrayToObj<ItemType extends Record<string, unknown>>(
   array: Array<ItemType>,
-  { keyName, valueName }: { keyName: keyof ItemType, valueName: keyof ItemType },
+  {
+    keyName,
+    valueName,
+  }: { keyName: keyof ItemType, valueName: keyof ItemType },
 ) {
   const obj: Record<string, ItemType[keyof ItemType]> = {}
   for (const item of array) {

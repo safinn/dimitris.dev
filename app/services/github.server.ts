@@ -29,7 +29,7 @@ const octokit = new Octokit({
   },
 })
 
-export interface GitHubFile {
+export type GitHubFile = {
   path: string
   content: string
 }

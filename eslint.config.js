@@ -6,5 +6,6 @@ export default antfu({
   react: true,
   rules: {
     'no-console': 'off',
+    'ts/consistent-type-definitions': ['error', 'type'],
   },
 })
