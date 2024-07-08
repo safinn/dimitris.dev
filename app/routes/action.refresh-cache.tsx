@@ -10,7 +10,7 @@ type Body =
   | { keys: Array<string>, commitSha?: string }
   | { contentPaths: Array<string>, commitSha?: string }
 
-export interface RefreshShaInfo {
+export type RefreshShaInfo = {
   sha: string
   date: string
 }

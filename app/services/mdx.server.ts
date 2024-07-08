@@ -12,7 +12,7 @@ import { logger } from './log.server'
 const defaultTTL = 1000 * 60 * 60 * 24 * 14 // 14 days
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30 // 30 days
 
-interface OptionalCachifiedOptions {
+type OptionalCachifiedOptions = {
   forceFresh?: boolean
   ttl?: number
 }
@@ -124,11 +124,11 @@ export async function getMdxDirList(
     },
   })
 }
-interface Keywords {
+type Keywords = {
   keywords?: Array<string>
 }
 
-interface MdxPage {
+type MdxPage = {
   code: string
   slug: string
   readTime?: ReturnType<typeof calculateReadingTime>

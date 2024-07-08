@@ -33,7 +33,7 @@ export const links: LinksFunction = () => [
   },
 ]
 
-export interface LoaderData {
+export type LoaderData = {
   theme: Theme | null
 }
 
