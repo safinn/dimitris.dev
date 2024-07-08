@@ -32,8 +32,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
-
 export async function action({ params, request }: DataFunctionArgs) {
   if (!params.slug) {
     throw new Error('params.slug is not defined')
