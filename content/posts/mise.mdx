@@ -9,7 +9,7 @@ categories: tools, tech
 
 #### Install
 
-```sh
+```shell
 curl https://mise.run | sh # install
 echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc # activate
 # for other shells see details
@@ -24,7 +24,7 @@ The install script will download the binary to `~/.local/bin/mise`.
 Activating allows mise to add itself to the PATH and register a shell hook to run [mise hook-env](https://mise.jdx.dev/faq.html#what-does-mise-activate-do) every time the shell prompt is displayed.
 
 Adding mise activation in other shells:
-```sh
+```shell
 echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
 echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
 echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
@@ -33,7 +33,7 @@ echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
 
 #### Install Global Tools
 
-```sh
+```shell
 mise use -g node pnpm@9 go@latest
 ```
 
@@ -49,7 +49,7 @@ The global configuration is saved in `~/.config/mise/config.toml`.
 
 #### Install Directory Tools
 
-```sh
+```shell
 touch .mise.toml
 mise use node@20 # lts at the time
 mise use pnpm
@@ -72,17 +72,17 @@ Globally we might live on the edge and install the latest `node` version but for
 mise updates the PATH every time the shell prompt is displayed. In non-interactive use-cases where there is no shell prompt, the PATH is not updated. [Shims](https://mise.jdx.dev/dev-tools/shims.html) give us access to the mise tools in non-interactive environments.
 
 I use [starship](https://starship.rs/) as a shell prompt so I install it globally:
-```sh
+```shell
 mise use -g starship
 ```
 
 For starship to work, we need to initialise it by adding the following line to `~/.zshrc`
-```sh
+```shell
 eval "$(starship init zsh)" # broken
 ```
 
 But this will not work because `.zshrc` has ran in a non-interactive session (and no prompt displayed) and mise has not been able to add starship to the path. mise provides shims for the tools in `~/.local/share/mise/shims` so we can change our `.zshrc` command to use the mise starship shim and we are good to go.
 
-```sh
+```shell
 eval "$(~/.local/share/mise/shims/starship init zsh)"
 ```
