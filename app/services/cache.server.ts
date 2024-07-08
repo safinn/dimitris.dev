@@ -1,9 +1,10 @@
+import process from 'node:process'
 import type { CacheEntry } from '@epic-web/cachified'
 import Database from 'better-sqlite3'
 import { getInstanceInfo, getInstanceInfoSync } from 'litefs-js'
 import invariant from 'tiny-invariant'
-import { updatePrimaryCacheValue } from '~/routes/action.cache'
 import { logger } from './log.server'
+import { updatePrimaryCacheValue } from '~/routes/action.cache'
 
 export const cacheDb = createDatabase()
 
@@ -16,7 +17,8 @@ function createDatabase() {
   db.pragma('journal_mode = WAL')
 
   const { currentIsPrimary } = getInstanceInfoSync()
-  if (!currentIsPrimary) return db
+  if (!currentIsPrimary)
+    return db
 
   try {
     // create cache table with metadata JSON column and value JSON column if it does not exist already
@@ -40,7 +42,8 @@ function createDatabase() {
       CREATE INDEX IF NOT EXISTS "views_slug_idx" ON "views"("slug");
       CREATE INDEX IF NOT EXISTS "views_clientId_slug_idx" ON "views"("clientId", "slug");
     `)
-  } catch (error) {
+  }
+  catch (error) {
     logger.error(`failed creating cache db at ${CACHE_DATABASE_PATH}`)
     throw error
   }
@@ -54,7 +57,8 @@ export const cache = {
       .prepare('SELECT value, metadata FROM cache WHERE key = ?')
       .get(key) as any
 
-    if (!result) return null
+    if (!result)
+      return null
 
     return {
       metadata: JSON.parse(result.metadata),
@@ -67,14 +71,15 @@ export const cache = {
     if (currentIsPrimary) {
       cacheDb
         .prepare(
-          'INSERT OR REPLACE INTO cache (key, value, metadata) VALUES (@key, @value, @metadata)'
+          'INSERT OR REPLACE INTO cache (key, value, metadata) VALUES (@key, @value, @metadata)',
         )
         .run({
           key,
           value: JSON.stringify(entry.value),
           metadata: JSON.stringify(entry.metadata),
         })
-    } else {
+    }
+    else {
       // fire-and-forget cache update
       void updatePrimaryCacheValue({
         key,
@@ -83,7 +88,7 @@ export const cache = {
         if (!response.ok) {
           logger.error(
             `Error updating cache value for key "${key}" on primary instance (${primaryInstance}): ${response.status} ${response.statusText}`,
-            { entry }
+            { entry },
           )
         }
       })
@@ -94,7 +99,8 @@ export const cache = {
 
     if (currentIsPrimary) {
       cacheDb.prepare('DELETE FROM cache WHERE key = ?').run(key)
-    } else {
+    }
+    else {
       // fire-and-forget cache update
       void updatePrimaryCacheValue({
         key,
@@ -102,7 +108,7 @@ export const cache = {
       }).then((response) => {
         if (!response.ok) {
           logger.error(
-            `Error deleting cache value for key "${key}" on primary instance (${primaryInstance}): ${response.status} ${response.statusText}`
+            `Error deleting cache value for key "${key}" on primary instance (${primaryInstance}): ${response.status} ${response.statusText}`,
           )
         }
       })

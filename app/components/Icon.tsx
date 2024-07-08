@@ -1,4 +1,4 @@
-import { SVGProps } from 'react'
+import type { SVGProps } from 'react'
 import spritesHref from '~/sprite.svg'
 
 export enum Icons {

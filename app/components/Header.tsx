@@ -1,6 +1,6 @@
 import { Link, NavLink } from '@remix-run/react'
-import ToggleTheme from './ToggleTheme'
 import clsx from 'clsx'
+import ToggleTheme from './ToggleTheme'
 import Icon, { Icons } from './Icon'
 
 export default function Header() {
@@ -63,28 +63,29 @@ function NavItem({
   target?: string
   ariaLabel?: string
 }) {
-  return disabled ? (
-    <div
-      className={clsx(
-        'text-zinc-900 dark:text-zinc-100 opacity-60',
-        disabled ? 'line-through cursor-not-allowed' : ''
-      )}
-    >
-      {children}
-    </div>
-  ) : (
-    <NavLink
-      to={to}
-      className={({ isActive, isPending }) =>
-        clsx(
-          'text-zinc-900 dark:text-zinc-100 hover:opacity-100 transition-opacity',
-          isPending || isActive ? 'opacity-100' : 'opacity-60'
-        )
-      }
-      aria-label={ariaLabel}
-      {...rest}
-    >
-      {children}
-    </NavLink>
-  )
+  return disabled
+    ? (
+        <div
+          className={clsx(
+            'text-zinc-900 dark:text-zinc-100 opacity-60',
+            disabled ? 'line-through cursor-not-allowed' : '',
+          )}
+        >
+          {children}
+        </div>
+      )
+    : (
+        <NavLink
+          to={to}
+          className={({ isActive, isPending }) =>
+            clsx(
+              'text-zinc-900 dark:text-zinc-100 hover:opacity-100 transition-opacity',
+              isPending || isActive ? 'opacity-100' : 'opacity-60',
+            )}
+          aria-label={ariaLabel}
+          {...rest}
+        >
+          {children}
+        </NavLink>
+      )
 }

@@ -4,7 +4,7 @@ import * as React from 'react'
 export const AnchorOrLink = React.forwardRef<
   HTMLAnchorElement,
   React.AnchorHTMLAttributes<HTMLAnchorElement>
->(function AnchorOrLink(props, ref) {
+>((props, ref) => {
   const { href, children, ...rest } = props
   let shouldUserRegularAnchor = true
 
@@ -18,9 +18,10 @@ export const AnchorOrLink = React.forwardRef<
         {children}
       </a>
     )
-  } else {
+  }
+  else {
     return (
-      <Link to={href ?? ''} {...rest} ref={ref} preventScrollReset={true}>
+      <Link to={href ?? ''} {...rest} ref={ref} preventScrollReset>
         {children}
       </Link>
     )

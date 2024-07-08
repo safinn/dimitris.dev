@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { createCookieSessionStorage } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 import { v4 as uuidv4 } from 'uuid'
@@ -19,7 +20,7 @@ const clientStorage = createCookieSessionStorage({
 export async function getClientSession(request: Request) {
   const session = await clientStorage.getSession(request.headers.get('Cookie'))
   let clientId = session.get('clientId') as string | undefined
-  let headers: Record<string, string> | undefined = undefined
+  let headers: Record<string, string> | undefined
 
   // generate client id and create header object if client id does not already exist
   if (!clientId) {

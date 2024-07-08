@@ -1,4 +1,5 @@
-import { json, redirect, type DataFunctionArgs } from '@remix-run/node'
+import process from 'node:process'
+import { type DataFunctionArgs, json, redirect } from '@remix-run/node'
 import { getInstanceInfo, getInternalInstanceDomain } from 'litefs-js'
 import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
@@ -9,17 +10,17 @@ export async function action({ request }: DataFunctionArgs) {
   const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
   if (!currentIsPrimary) {
     throw new Error(
-      `${request.url} should only be called on the primary instance (${primaryInstance})}`
+      `${request.url} should only be called on the primary instance (${primaryInstance})}`,
     )
   }
   const { INTERNAL_COMMAND_TOKEN } = process.env
   invariant(INTERNAL_COMMAND_TOKEN, 'INTERNAL_COMMAND_TOKEN must be set')
 
-  const isAuthorized =
-    request.headers.get('Authorization') === `Bearer ${INTERNAL_COMMAND_TOKEN}`
+  const isAuthorized
+    = request.headers.get('Authorization') === `Bearer ${INTERNAL_COMMAND_TOKEN}`
   if (!isAuthorized) {
     logger.warn(
-      `Unauthorized request to ${request.url}, redirecting to solid tunes 🎶`
+      `Unauthorized request to ${request.url}, redirecting to solid tunes 🎶`,
     )
     // rick roll them
     return redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
@@ -28,7 +29,8 @@ export async function action({ request }: DataFunctionArgs) {
   if (cacheValue === undefined) {
     logger.info(`Deleting ${key} from the cache from remote`)
     await cache.delete(key)
-  } else {
+  }
+  else {
     logger.info(`Setting ${key} in the cache from remote`)
     await cache.set(key, cacheValue)
   }
@@ -45,7 +47,7 @@ export async function updatePrimaryCacheValue({
   const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
   if (currentIsPrimary) {
     throw new Error(
-      `updatePrimaryCacheValue should not be called on the primary instance (${primaryInstance})}`
+      `updatePrimaryCacheValue should not be called on the primary instance (${primaryInstance})}`,
     )
   }
   const domain = getInternalInstanceDomain(primaryInstance)
@@ -55,7 +57,7 @@ export async function updatePrimaryCacheValue({
   return fetch(`${domain}/action/cache`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${INTERNAL_COMMAND_TOKEN}`,
+      'Authorization': `Bearer ${INTERNAL_COMMAND_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ key, cacheValue }),

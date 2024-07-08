@@ -6,7 +6,7 @@
 fuse:
   # Required. This is the mount directory that applications will
   # use to access their SQLite databases.
-  dir: '/litefs'
+  dir: /litefs
 
   # Set this flag to true to allow non-root users to access mount.
   # You must set the "user_allow_other" option in /etc/fuse.conf first.
@@ -26,13 +26,13 @@ fuse:
 # to extend retention too long.
 data:
   # Path to internal data storage.
-  dir: '/data'
+  dir: /data
 
   # Duration to keep LTX files. Latest LTX file is always kept.
-  retention: '10m'
+  retention: 10m
 
   # Frequency with which to check for LTX files to delete.
-  retention-monitor-interval: '1m'
+  retention-monitor-interval: 1m
 
 # If true, then LiteFS will not wait until the node becomes the
 # primary or connects to the primary before starting the subprocess.
@@ -60,7 +60,7 @@ proxy:
   target: 'localhost:3001'
 
   # The name of the database used for TXID tracking.
-  db: 'sqlite.db'
+  db: sqlite.db
 
   # If true, enables verbose logging of requests by the proxy.
   debug: false
@@ -78,7 +78,7 @@ proxy:
 # not failover.
 lease:
   # Required. Must be either "consul" or "static".
-  type: 'consul'
+  type: consul
 
   # Required. The URL for this node's LiteFS API.
   # Should match HTTP port.
@@ -108,9 +108,9 @@ lease:
     # handoff the lease to another replica without downtime.
     #
     # Consul does not allow a TTL of less than 10 seconds.
-    ttl: '10s'
+    ttl: 10s
 
     # Length of time after the lease expires before a candidate
     # can become leader. This buffer is intended to prevent
     # overlap in leadership due to clock skew or in-flight calls.
-    lock-delay: '1s'
+    lock-delay: 1s

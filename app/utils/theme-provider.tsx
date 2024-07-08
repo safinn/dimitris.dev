@@ -1,12 +1,13 @@
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import {
   createContext,
   createElement,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
-import type { Dispatch, ReactNode, SetStateAction } from 'react'
 
 enum Theme {
   DARK = 'dark',
@@ -20,8 +21,9 @@ type ThemeContextType = [Theme | null, Dispatch<SetStateAction<Theme | null>>]
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 const prefersDarkMQ = '(prefers-color-scheme: dark)'
-const getPreferredTheme = () =>
-  window.matchMedia(prefersDarkMQ).matches ? Theme.DARK : Theme.LIGHT
+function getPreferredTheme() {
+  return window.matchMedia(prefersDarkMQ).matches ? Theme.DARK : Theme.LIGHT
+}
 
 function ThemeProvider({
   children,
@@ -34,7 +36,8 @@ function ThemeProvider({
     if (specifiedTheme) {
       if (themes.includes(specifiedTheme)) {
         return specifiedTheme
-      } else {
+      }
+      else {
         return null
       }
     }
@@ -74,8 +77,17 @@ function ThemeProvider({
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  const providerValue = useMemo(
+    () =>
+      [theme, setTheme] as [
+        Theme | null,
+        Dispatch<SetStateAction<Theme | null>>,
+      ],
+    [theme, setTheme],
+  )
+
   return (
-    <ThemeContext.Provider value={[theme, setTheme]}>
+    <ThemeContext.Provider value={providerValue}>
       {children}
     </ThemeContext.Provider>
   )
@@ -181,13 +193,15 @@ const clientDarkAndLightModeElsCode = `;(() => {
   }
 })();`
 
-function ThemeBody({ nonce, ssrTheme }: { nonce?: string; ssrTheme: boolean }) {
-  return ssrTheme ? null : (
-    <script
-      nonce={nonce}
-      dangerouslySetInnerHTML={{ __html: clientDarkAndLightModeElsCode }}
-    />
-  )
+function ThemeBody({ nonce, ssrTheme }: { nonce?: string, ssrTheme: boolean }) {
+  return ssrTheme
+    ? null
+    : (
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: clientDarkAndLightModeElsCode }}
+        />
+      )
 }
 
 function NonFlashOfWrongThemeEls({
@@ -213,19 +227,22 @@ function NonFlashOfWrongThemeEls({
         If we know what the theme is from the server then we don't need
         to do fancy tricks prior to hydration to make things match.
       */}
-      {ssrTheme ? null : (
-        <>
-          <script
-            // NOTE: we cannot use type="module" because that automatically makes
-            // the script "defer". That doesn't work for us because we need
-            // this script to run synchronously before the rest of the document
-            // is finished loading.
-            nonce={nonce}
-            dangerouslySetInnerHTML={{ __html: clientThemeCode }}
-          />
-          <style dangerouslySetInnerHTML={{ __html: themeStylesCode }} />
-        </>
-      )}
+
+      {ssrTheme
+        ? null
+        : (
+            <>
+              <script
+                // NOTE: we cannot use type="module" because that automatically makes
+                // the script "defer". That doesn't work for us because we need
+                // this script to run synchronously before the rest of the document
+                // is finished loading.
+                nonce={nonce}
+                dangerouslySetInnerHTML={{ __html: clientThemeCode }}
+              />
+              <style dangerouslySetInnerHTML={{ __html: themeStylesCode }} />
+            </>
+          )}
     </>
   )
 }
@@ -268,11 +285,11 @@ function isTheme(value: unknown): value is Theme {
 }
 
 export {
-  isTheme,
   NonFlashOfWrongThemeEls,
-  Themed,
   Theme,
-  ThemeProvider,
-  useTheme,
   ThemeBody,
+  ThemeProvider,
+  Themed,
+  isTheme,
+  useTheme,
 }

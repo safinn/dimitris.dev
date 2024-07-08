@@ -9,13 +9,6 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import clsx from 'clsx'
-import {
-  NonFlashOfWrongThemeEls,
-  Theme,
-  ThemeBody,
-  ThemeProvider,
-  useTheme,
-} from '~/utils/theme-provider'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import spritesHref from './sprite.svg'
@@ -23,6 +16,13 @@ import './styles/tailwind.css'
 
 import { useNonce } from './utils/nonce-provider'
 import { getThemeSession } from './utils/theme.server'
+import type { Theme } from '~/utils/theme-provider'
+import {
+  NonFlashOfWrongThemeEls,
+  ThemeBody,
+  ThemeProvider,
+  useTheme,
+} from '~/utils/theme-provider'
 
 export const links: LinksFunction = () => [
   {
@@ -33,11 +33,11 @@ export const links: LinksFunction = () => [
   },
 ]
 
-export type LoaderData = {
+export interface LoaderData {
   theme: Theme | null
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export async function loader({ request }: LoaderFunctionArgs) {
   const themeSession = await getThemeSession(request)
 
   const data: LoaderData = {

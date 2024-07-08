@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 // try to keep this dep-free so we don't have to install deps
 const { getChangedFiles, fetchJson } = require('./get-changed-files.cjs')
 const { postRefreshCache } = require('./utils.cjs')
@@ -17,7 +19,7 @@ async function go() {
     })
     compareSha = buildInfo.commit.sha
     console.log(
-      `No compare sha found, using build sha: ${buildInfo.commit.sha}`
+      `No compare sha found, using build sha: ${buildInfo.commit.sha}`,
     )
   }
   if (typeof compareSha !== 'string') {
@@ -25,11 +27,11 @@ async function go() {
     return
   }
 
-  const changedFiles =
-    (await getChangedFiles(currentCommitSha, compareSha)) ?? []
+  const changedFiles
+    = (await getChangedFiles(currentCommitSha, compareSha)) ?? []
   const contentPaths = changedFiles
-    .filter((f) => f.filename.startsWith('content'))
-    .map((f) => f.filename.replace(/^content\//, ''))
+    .filter(f => f.filename.startsWith('content'))
+    .map(f => f.filename.replace(/^content\//, ''))
   if (contentPaths.length) {
     console.log(`⚡️ Content changed. Requesting the cache be refreshed.`, {
       currentCommitSha,
@@ -43,7 +45,8 @@ async function go() {
       },
     })
     console.log(`Content change request finished.`, { response })
-  } else {
+  }
+  else {
     console.log('🆗 Not refreshing changed content because no content changed.')
   }
 }

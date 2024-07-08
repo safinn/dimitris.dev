@@ -7,9 +7,9 @@
 import { PassThrough } from 'node:stream'
 
 import {
-  createReadableStreamFromReadable,
   type AppLoadContext,
   type EntryContext,
+  createReadableStreamFromReadable,
 } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
@@ -28,19 +28,19 @@ export default function handleRequest(
 ) {
   return isbot(request.headers.get('user-agent'))
     ? handleBotRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-        loadContext,
-      )
+      request,
+      responseStatusCode,
+      responseHeaders,
+      remixContext,
+      loadContext,
+    )
     : handleBrowserRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-        loadContext,
-      )
+      request,
+      responseStatusCode,
+      responseHeaders,
+      remixContext,
+      loadContext,
+    )
 }
 
 function handleBotRequest(

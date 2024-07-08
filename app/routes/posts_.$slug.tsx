@@ -1,25 +1,22 @@
+import process from 'node:process'
 import type {
   DataFunctionArgs,
   LinksFunction,
   LoaderFunctionArgs,
 } from '@remix-run/node'
-import { useCallback, useEffect, useRef } from 'react'
 import { json } from '@remix-run/node'
-import {
-  MetaFunction,
-  useFetcher,
-  useLoaderData,
-  useLocation,
-} from '@remix-run/react'
+import type { MetaFunction } from '@remix-run/react'
+import { useFetcher, useLoaderData, useLocation } from '@remix-run/react'
+import { useCallback, useEffect, useRef } from 'react'
+import { addView } from '~/services/db.server'
 import { getMdxPage } from '~/services/mdx.server'
-import { useMdxComponent } from '~/utils/mdx'
 import styles from '~/styles/prose.css'
 import { getClientSession } from '~/utils/client.server'
-import { addView } from '~/services/db.server'
+import { useMdxComponent } from '~/utils/mdx'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const ogTitle =
-    data?.page.frontmatter.socialImageTitle || data?.page.frontmatter.title
+  const ogTitle
+    = data?.page.frontmatter.socialImageTitle || data?.page.frontmatter.title
 
   return [
     { title: data?.page.frontmatter.title },
@@ -60,7 +57,7 @@ export async function action({ params, request }: DataFunctionArgs) {
   }
 }
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!params.slug) {
     throw new Error('params.slug is not defined')
   }
@@ -72,10 +69,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   }
 
   const ogImageTitle = encodeURIComponent(
-    page.frontmatter.socialImageTitle || page.frontmatter.title || 'No Title!'
+    page.frontmatter.socialImageTitle || page.frontmatter.title || 'No Title!',
   )
   const url = new URL(request.url)
-  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
+  if (process.env.NODE_ENV === 'production')
+    url.protocol = 'https'
   const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
   return json({ page, ogImageUrl })
 }
@@ -119,10 +117,11 @@ export default function Post() {
   useOnView({
     time: data.page.readTime?.time,
     onView: useCallback(() => {
-      if (isDraft) return
+      if (isDraft)
+        return
       markAsReadRef.current.submit(
         { intent: 'mark-as-view' },
-        { method: 'POST' }
+        { method: 'POST' },
       )
     }, [isDraft]),
   })

@@ -1,6 +1,6 @@
 // try to keep this dep-free so we don't have to install deps
-const execSync = require('child_process').execSync
-const https = require('https')
+const execSync = require('node:child_process').execSync
+const https = require('node:https')
 
 function fetchJson(url, { timoutTime } = {}) {
   return new Promise((resolve, reject) => {
@@ -14,7 +14,8 @@ function fetchJson(url, { timoutTime } = {}) {
         res.on('end', () => {
           try {
             resolve(JSON.parse(data))
-          } catch (error) {
+          }
+          catch (error) {
             reject(error)
           }
         })
@@ -39,25 +40,29 @@ const changeTypes = {
 
 async function getChangedFiles(currentCommitSha, compareCommitSha) {
   try {
-    const lineParser = /^(?<change>\w).*?\s+(?<filename>.+$)/
+    const lineParser
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+      = /^(?<change>\w).*?(?:[\n\r\u2028\u2029]\s*|[\t\v\f \xA0\u1680\u2000-\u200A\u202F\u205F\u3000\uFEFF])(?<filename>.+$)/
     const gitOutput = execSync(
-      `git diff --name-status ${currentCommitSha} ${compareCommitSha}`
+      `git diff --name-status ${currentCommitSha} ${compareCommitSha}`,
     ).toString()
     const changedFiles = gitOutput
       .split('\n')
-      .map((line) => line.match(lineParser)?.groups)
+      .map(line => line.match(lineParser)?.groups)
       .filter(Boolean)
     const changes = []
     for (const { change, filename } of changedFiles) {
       const changeType = changeTypes[change]
       if (changeType) {
         changes.push({ changeType: changeTypes[change], filename })
-      } else {
+      }
+      else {
         console.error(`Unknown change type: ${change} ${filename}`)
       }
     }
     return changes
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`Something went wrong trying to get changed files.`, error)
     return null
   }

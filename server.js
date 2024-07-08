@@ -1,9 +1,10 @@
+import crypto from 'node:crypto'
+import process from 'node:process'
 import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import crypto from 'node:crypto'
 
 const { NODE_ENV } = process.env
 const isDev = NODE_ENV === 'development'
@@ -11,11 +12,11 @@ const isProd = NODE_ENV === 'production'
 
 const viteDevServer = isProd
   ? undefined
-  : await import('vite').then((vite) =>
-      vite.createServer({
-        server: { middlewareMode: true },
-      }),
-    )
+  : await import('vite').then(vite =>
+    vite.createServer({
+      server: { middlewareMode: true },
+    }),
+  )
 
 const remixHandler = createRequestHandler({
   getLoadContext: (_, res) => ({
@@ -28,7 +29,7 @@ const remixHandler = createRequestHandler({
 
 const app = express()
 
-const getHost = (req) => req.get('X-Forwarded-Host') ?? req.get('host') ?? ''
+const getHost = req => req.get('X-Forwarded-Host') ?? req.get('host') ?? ''
 
 // ensure HTTPS only (X-Forwarded-Proto comes from Fly)
 app.use((req, res, next) => {
@@ -48,7 +49,8 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safepath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safepath + query)
-  } else {
+  }
+  else {
     next()
   }
 })
@@ -58,7 +60,8 @@ app.use(compression())
 // handle asset requests
 if (viteDevServer) {
   app.use(viteDevServer.middlewares)
-} else {
+}
+else {
   // Vite fingerprints its assets so we can cache forever.
   app.use(
     '/assets',
@@ -70,7 +73,6 @@ if (viteDevServer) {
 
         if (relativePath.startsWith('info.json')) {
           res.setHeader('cache-control', 'no-cache')
-          return
         }
       },
     }),
@@ -93,12 +95,12 @@ app.use(
     xPoweredBy: null,
     contentSecurityPolicy: {
       directives: {
-        connectSrc: isDev ? ['ws:', "'self'"] : null,
+        connectSrc: isDev ? ['ws:', '\'self\''] : null,
         scriptSrc: [
-          "'self'",
-          "'unsafe-eval'",
+          '\'self\'',
+          '\'unsafe-eval\'',
           isDev
-            ? "'sha256-gRR+6gJs/kocf3LfN3EZY9IiGF5Ahm9Zq8V6gmW7Yc8='"
+            ? '\'sha256-gRR+6gJs/kocf3LfN3EZY9IiGF5Ahm9Zq8V6gmW7Yc8=\''
             : null,
           (req, res) => `'nonce-${res.locals.cspNonce}'`,
         ],

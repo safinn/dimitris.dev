@@ -1,36 +1,34 @@
-import { MouseEvent } from 'react'
 import { flushSync } from 'react-dom'
-import { Theme, Themed, useTheme } from '~/utils/theme-provider'
 import Icon, { Icons } from './Icon'
+import { Theme, Themed, useTheme } from '~/utils/theme-provider'
 
 export default function ToggleTheme() {
   const [theme, setTheme] = useTheme()
 
-  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
-    const isAppearanceTransition =
+  const toggleTheme = () => {
+    const isAppearanceTransition
       // @ts-expect-error experimental API
-      document.startViewTransition &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      = document.startViewTransition
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (!isAppearanceTransition) {
-      setTheme((prevTheme) =>
-        prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+      setTheme(prevTheme =>
+        prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT,
       )
       return
     }
 
-    const x = event.clientX
-    const y = event.clientY
-    const endRadius = Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
-    )
+    // const x = event.clientX
+    // const y = event.clientY
+    // const endRadius = Math.hypot(
+    //   Math.max(x, innerWidth - x),
+    //   Math.max(y, innerHeight - y),
+    // )
 
-    // @ts-expect-error experimental API
     const transition = document.startViewTransition(() => {
       flushSync(() => {
-        setTheme((prevTheme) =>
-          prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+        setTheme(prevTheme =>
+          prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT,
         )
       })
     })
@@ -52,13 +50,14 @@ export default function ToggleTheme() {
             theme === Theme.DARK
               ? '::view-transition-old(root)'
               : '::view-transition-new(root)',
-        }
+        },
       )
     })
   }
 
   return (
     <button
+      type="button"
       className="text-zinc-900 dark:text-zinc-100 opacity-60 hover:opacity-100 transition-opacity"
       aria-label="Theme mode toggle"
       onClick={toggleTheme}

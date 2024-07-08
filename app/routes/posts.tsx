@@ -1,12 +1,14 @@
+import process from 'node:process'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, MetaFunction, useLoaderData } from '@remix-run/react'
+import type { MetaFunction } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import type { MdxListItemViews } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: 'Blog - Dimitris Karittevlis' },
-    { name: 'description', content: "Dimitris Karittevlis' blog post list" },
+    { name: 'description', content: 'Dimitris Karittevlis\' blog post list' },
     {
       property: 'og:image',
       content: data?.ogImageUrl,
@@ -14,7 +16,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export async function loader({ request }: LoaderFunctionArgs) {
   const posts = await getBlogMdxListItems()
 
   const emptyLines = [
@@ -30,7 +32,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const ogImageTitle = encodeURIComponent('dimitris.dev Post List')
   const url = new URL(request.url)
-  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
+  if (process.env.NODE_ENV === 'production')
+    url.protocol = 'https'
   const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
 
   return { posts, emptyLine, ogImageUrl }
@@ -41,15 +44,17 @@ export default function Posts() {
 
   return (
     <div className="max-w-screen-sm mx-auto">
-      {!data.posts.length ? (
-        <div>{data.emptyLine}</div>
-      ) : (
-        <ol>
-          {data.posts.map((post) => (
-            <PostItem key={post.slug} post={post} />
-          ))}
-        </ol>
-      )}
+      {!data.posts.length
+        ? (
+            <div>{data.emptyLine}</div>
+          )
+        : (
+            <ol>
+              {data.posts.map(post => (
+                <PostItem key={post.slug} post={post} />
+              ))}
+            </ol>
+          )}
     </div>
   )
 }
@@ -63,7 +68,10 @@ function PostItem({ post }: { post: MdxListItemViews }) {
         </span>
       )}
       <Link to={post.slug}>
-        {post.frontmatter.title} {post.views}{' '}
+        {post.frontmatter.title}
+        {' '}
+        {post.views}
+        {' '}
         {post.views === 1 ? 'view' : 'views'}
       </Link>
     </li>

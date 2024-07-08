@@ -1,10 +1,11 @@
-import { LoaderFunctionArgs } from '@remix-run/node'
+import process from 'node:process'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import type { MetaFunction } from '@remix-run/react'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     { title: 'Dimitris Karittevlis' },
-    { name: 'description', content: "Dimitris Karittevlis' Portfolio" },
+    { name: 'description', content: 'Dimitris Karittevlis\' Portfolio' },
     {
       property: 'og:image',
       content: data?.ogImageUrl,
@@ -12,10 +13,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const ogImageTitle = encodeURIComponent("Hey I'm Dimitris, a Developer!")
+export async function loader({ request }: LoaderFunctionArgs) {
+  const ogImageTitle = encodeURIComponent('Hey I\'m Dimitris, a Developer!')
   const url = new URL(request.url)
-  if (process.env.NODE_ENV === 'production') url.protocol = 'https'
+  if (process.env.NODE_ENV === 'production')
+    url.protocol = 'https'
   const ogImageUrl = `${url.origin}/action/og?title=${ogImageTitle}`
   return { ogImageUrl }
 }
@@ -27,10 +29,17 @@ export default function Index() {
         Dimitris
       </h1>
       <p>
-        Software Engineer at <A href="https://riskledger.com">Risk Ledger</A>
+        Software Engineer at
+        {' '}
+        <A href="https://riskledger.com">Risk Ledger</A>
       </p>
       <p>
-        Previously <A href="https://sky.com">Sky</A> and{' '}
+        Previously
+        {' '}
+        <A href="https://sky.com">Sky</A>
+        {' '}
+        and
+        {' '}
         <A href="https://www.rolls-roycemotorcars.com">
           Rolls-Royce Motor Cars
         </A>
@@ -39,7 +48,7 @@ export default function Index() {
   )
 }
 
-function A({ children, href }: { children: string; href: string }) {
+function A({ children, href }: { children: string, href: string }) {
   return (
     <a
       className="text-zinc-900 dark:text-zinc-100 border-b border-zinc-900 dark:border-zinc-100 border-opacity-20 dark:border-opacity-20 hover:border-opacity-100 hover:dark:border-opacity-100 transition-colors"

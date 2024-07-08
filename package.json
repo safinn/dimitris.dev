@@ -1,7 +1,10 @@
 {
+  "type": "module",
   "private": true,
   "sideEffects": false,
-  "type": "module",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "build": "remix vite:build",
     "deploy": "fly deploy --remote-only",
@@ -45,6 +48,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "2.22.0-beta.3",
     "@flydotio/dockerfile": "^0.5.7",
     "@remix-run/dev": "^2.10.2",
     "@types/better-sqlite3": "^7.6.11",
@@ -53,6 +57,7 @@
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.6.0",
+    "eslint-plugin-format": "^0.1.2",
     "pino-pretty": "^11.2.1",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
@@ -61,8 +66,5 @@
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.2"
-  },
-  "engines": {
-    "node": ">=14"
   }
 }

@@ -1,8 +1,11 @@
+import Buffer from 'node:buffer'
+import process from 'node:process'
+
 const hostname = 'dimitris.dev'
 
 // try to keep this dep-free so we don't have to install deps
 function postRefreshCache({
-  http = require('https'),
+  http = require('node:https'),
   postData,
   options: { headers: headersOverrides, ...optionsOverrides } = {},
 }) {
@@ -15,7 +18,7 @@ function postRefreshCache({
         path: `/action/refresh-cache`,
         method: 'POST',
         headers: {
-          auth: process.env.REFRESH_CACHE_SECRET,
+          'auth': process.env.REFRESH_CACHE_SECRET,
           'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(postDataString),
           ...headersOverrides,
@@ -33,7 +36,8 @@ function postRefreshCache({
           res.on('end', () => {
             try {
               resolve(JSON.parse(data))
-            } catch (error) {
+            }
+            catch {
               reject(data)
             }
           })
@@ -41,7 +45,8 @@ function postRefreshCache({
         .on('error', reject)
       req.write(postDataString)
       req.end()
-    } catch (error) {
+    }
+    catch (error) {
       console.log('oh no', error)
       reject(error)
     }

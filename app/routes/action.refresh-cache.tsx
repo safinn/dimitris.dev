@@ -1,27 +1,28 @@
-import { json, redirect, type DataFunctionArgs } from '@remix-run/node'
-import path from 'path'
-import invariant from 'tiny-invariant'
+import path from 'node:path'
+import process from 'node:process'
+import { type DataFunctionArgs, json, redirect } from '@remix-run/node'
 import { ensurePrimary } from 'litefs-js/dist/remix.js'
+import invariant from 'tiny-invariant'
 import { cache } from '~/services/cache.server'
 import { getBlogMdxListItems, getMdxPage } from '~/services/mdx.server'
 
 type Body =
-  | { keys: Array<string>; commitSha?: string }
-  | { contentPaths: Array<string>; commitSha?: string }
+  | { keys: Array<string>, commitSha?: string }
+  | { contentPaths: Array<string>, commitSha?: string }
 
-export type RefreshShaInfo = {
+export interface RefreshShaInfo {
   sha: string
   date: string
 }
 
 export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
   return (
-    typeof value === 'object' &&
-    value !== null &&
-    'sha' in value &&
-    typeof value.sha === 'string' &&
-    'date' in value &&
-    typeof value.date === 'string'
+    typeof value === 'object'
+    && value !== null
+    && 'sha' in value
+    && typeof value.sha === 'string'
+    && 'date' in value
+    && typeof value.date === 'string'
   )
 }
 
@@ -87,7 +88,7 @@ export async function action({ request }: DataFunctionArgs) {
 
     // if any posts contentPaths were changed then let's update the dir list
     // so it will appear on the blog page.
-    if (refreshingContentPaths.some((p) => p.startsWith('posts'))) {
+    if (refreshingContentPaths.some(p => p.startsWith('posts'))) {
       void getBlogMdxListItems({
         forceFresh: true,
       })

@@ -1,10 +1,10 @@
 import { json } from '@remix-run/node'
-import { cache } from '~/services/cache.server'
 import {
+  type RefreshShaInfo,
   isRefreshShaInfo,
   commitShaKey as refreshCacheCommitShaKey,
-  type RefreshShaInfo,
 } from './action.refresh-cache'
+import { cache } from '~/services/cache.server'
 import { logger } from '~/services/log.server'
 
 export async function loader() {
@@ -18,7 +18,8 @@ export async function loader() {
     if (!isRefreshShaInfo(value)) {
       throw new Error(`Invalid value: ${result.value}`)
     }
-  } catch (error: unknown) {
+  }
+  catch (error: unknown) {
     logger.error(error, `Error parsing commit sha from cache`)
     cache.delete(refreshCacheCommitShaKey)
     return json(null)

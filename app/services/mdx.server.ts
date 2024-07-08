@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { cachified } from '@epic-web/cachified'
 import * as dateFns from 'date-fns'
 import type calculateReadingTime from 'reading-time'
@@ -11,7 +12,7 @@ import { logger } from './log.server'
 const defaultTTL = 1000 * 60 * 60 * 24 * 14 // 14 days
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30 // 30 days
 
-type OptionalCachifiedOptions = {
+interface OptionalCachifiedOptions {
   forceFresh?: boolean
   ttl?: number
 }
@@ -19,7 +20,7 @@ type OptionalCachifiedOptions = {
 export async function downloadMdxFilesCached(
   contentDir: string,
   slug: string,
-  options?: OptionalCachifiedOptions
+  options?: OptionalCachifiedOptions,
 ) {
   const { forceFresh, ttl = defaultTTL } = options || {}
   const key = `${contentDir}:${slug}:downloaded`
@@ -58,18 +59,21 @@ export async function downloadMdxFilesCached(
 }
 
 function typedBoolean<T>(
-  value: T
+  value: T,
 ): value is Exclude<T, '' | 0 | false | null | undefined> {
   return Boolean(value)
 }
 
-const checkCompiledValue = (value: unknown) =>
-  typeof value === 'object' &&
-  (value === null || ('code' in value && 'frontmatter' in value))
+function checkCompiledValue(value: unknown) {
+  return (
+    typeof value === 'object'
+    && (value === null || ('code' in value && 'frontmatter' in value))
+  )
+}
 
 async function getMdxPagesInDirectory(
   contentDir: string,
-  options?: OptionalCachifiedOptions
+  options?: OptionalCachifiedOptions,
 ) {
   const dirList = await getMdxDirList(contentDir, options)
 
@@ -79,13 +83,13 @@ async function getMdxPagesInDirectory(
         ...(await downloadMdxFilesCached(contentDir, slug, options)),
         slug,
       }
-    })
+    }),
   )
 
   const pages = await Promise.all(
-    pageDatas.map((pageData) =>
-      compileMdxCached({ contentDir, ...pageData, options })
-    )
+    pageDatas.map(pageData =>
+      compileMdxCached({ contentDir, ...pageData, options }),
+    ),
   )
   return pages.filter(typedBoolean)
 }
@@ -94,7 +98,7 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
 
 export async function getMdxDirList(
   contentDir: string,
-  options?: OptionalCachifiedOptions
+  options?: OptionalCachifiedOptions,
 ) {
   const { forceFresh, ttl = defaultTTL } = options ?? {}
   const key = getDirListKey(contentDir)
@@ -105,7 +109,7 @@ export async function getMdxDirList(
     ttl,
     staleWhileRevalidate: defaultStaleWhileRevalidate,
     forceFresh,
-    checkValue: (value) => Array.isArray(value),
+    checkValue: value => Array.isArray(value),
     getFreshValue: async () => {
       const fullContentDirPath = `content/${contentDir}`
       const dirList = (await downloadDirList(fullContentDirPath))
@@ -120,11 +124,11 @@ export async function getMdxDirList(
     },
   })
 }
-type Keywords = {
+interface Keywords {
   keywords?: Array<string>
 }
 
-type MdxPage = {
+interface MdxPage {
   code: string
   slug: string
   readTime?: ReturnType<typeof calculateReadingTime>
@@ -186,11 +190,12 @@ export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
     staleWhileRevalidate: defaultStaleWhileRevalidate,
     async getFreshValue() {
       let pages = await getMdxPagesInDirectory('posts', options).then(
-        (allPosts) =>
+        allPosts =>
           allPosts.filter((p) => {
-            if (process.env.NODE_ENV === 'development') return true
+            if (process.env.NODE_ENV === 'development')
+              return true
             return !p.frontmatter.draft && !p.frontmatter.unlisted
-          })
+          }),
       )
 
       pages = pages.sort((a, z) => {
@@ -208,7 +213,7 @@ export async function getBlogMdxListItems(options?: OptionalCachifiedOptions) {
       obj[view.slug] = view.views
       return obj
     },
-    {}
+    {},
   )
 
   return blogMdxListItems.map((item) => {
@@ -262,7 +267,8 @@ async function compileMdxCached({
           ...compiledPage,
           slug,
         }
-      } else {
+      }
+      else {
         return null
       }
     },
@@ -284,7 +290,7 @@ export async function getMdxPage(
     contentDir: string
     slug: string
   },
-  options?: OptionalCachifiedOptions
+  options?: OptionalCachifiedOptions,
 ): Promise<MdxPageViews | null> {
   const { forceFresh, ttl = defaultTTL } = options || {}
   const key = `mdx-page:${contentDir}:${slug}:compiled`
@@ -316,7 +322,8 @@ export async function getMdxPage(
     // if there's no page, let's remove it from the cache
     void cache.delete(key)
     return page
-  } else {
+  }
+  else {
     const viewsForSlug = getViewsForSlug(`/${contentDir}/${slug}`) || 0
     return { ...page, views: viewsForSlug.views }
   }
