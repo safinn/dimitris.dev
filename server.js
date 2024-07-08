@@ -95,15 +95,18 @@ app.use(
     xPoweredBy: null,
     contentSecurityPolicy: {
       directives: {
-        connectSrc: isDev ? ['ws:', '\'self\''] : null,
-        scriptSrc: [
+        connectSrc: [
+          isDev ? 'ws:' : null,
           '\'self\'',
+        ],
+        scriptSrc: [
           '\'unsafe-eval\'',
+          '\'self\'',
+          (req, res) => `'nonce-${res.locals.cspNonce}'`,
           isDev
             ? '\'sha256-gRR+6gJs/kocf3LfN3EZY9IiGF5Ahm9Zq8V6gmW7Yc8=\''
             : null,
-          (req, res) => `'nonce-${res.locals.cspNonce}'`,
-        ],
+        ].filter(Boolean),
       },
     },
   }),

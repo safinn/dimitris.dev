@@ -1,7 +1,6 @@
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -86,7 +85,6 @@ function App() {
         <Footer />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   )
