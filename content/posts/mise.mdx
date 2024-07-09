@@ -1,13 +1,13 @@
 ---
-title: Mise
+title: Development Environment Setup with Mise
 date: 2024-07-08
 draft: true
 categories: tools, tech
 ---
 
-## Getting Started With Mise
+Installing and managing many development environment tools and keeping them aligned within teams can be a pain. Mise to the rescue!
 
-#### Install
+### Install
 
 ```sh
 curl https://mise.run | sh # install
@@ -31,7 +31,7 @@ echo '~/.local/bin/mise activate fish | source' >> ~/.config/fish/config.fish
 ```
 </details>
 
-#### Install Global Tools
+### Install Global Tools
 
 ```shell
 mise use -g node pnpm@9 go@latest
@@ -47,7 +47,7 @@ We can run `go version{:sh}` (and equivalent for the other tools) now and see we
 The global configuration is saved in `~/.config/mise/config.toml{:sh}`.
 </details>
 
-#### Install Directory Tools
+### Install Directory Tools
 
 ```shell
 touch .mise.toml
@@ -67,7 +67,7 @@ When not in our project directory, the global version of node (latest) will be u
 Globally we might live on the edge and install the latest `node{:sh}` version but for this specific project we are using the long-term support version.
 </details>
 
-#### Shims
+### Shims
 
 mise updates the PATH every time the shell prompt is displayed. In non-interactive use-cases where there is no shell prompt, the PATH is not updated. [Shims](https://mise.jdx.dev/dev-tools/shims.html) give us access to the mise tools in non-interactive environments.
 
@@ -85,4 +85,13 @@ But this will not work because `.zshrc{:sh}` has ran in a non-interactive sessio
 
 ```shell
 eval "$(~/.local/share/mise/shims/starship init zsh)"
+```
+
+### Other Useful Commands
+
+```sh
+mise ls-remote go
+mise ls
+mise self-update
+mise doctor
 ```
