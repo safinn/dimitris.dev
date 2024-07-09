@@ -57,18 +57,18 @@ mise use pnpm
 <details>
 <summary>Install directory tools details</summary>
 
-Once we create a `.mise.toml{:sh}` file in the root of our project we can use the same `mise use{:sh}` (without the `-g{:sh}` flag) commands to install tool specific for that project. This will update the current directory `.mise.toml{:sh}` file configuration.
+Once we create a `.mise.toml{:sh}` file in the root of our project we can use the same `mise use{:sh}` (without the `-g{:sh}` flag) commands to install tools specific for that project. This will update the current directory `.mise.toml{:sh}` file configuration.
 
 Users who encounter an existing `.mise.toml{:sh}` file simply run `mise install{:sh}` to get all tools listed in the config with the correct versions.
 
 When not in our project directory, the global version of node (latest) will be used but when we `cd{:sh}` into our project directory with `.mise.toml{:sh}` node version 20 will be used. Try printing the version to see for yourself in different directories.
 
-Globally we might live on the edge and install the latest `node{:sh}` version but for this specific project we are using the long-term support (lts) version.
+Globally we might live on the edge and install the latest `node{:sh}` version but for this specific project, we are using the long-term support (lts) version.
 </details>
 
 ### Shims
 
-mise updates the PATH every time the shell prompt is displayed. In non-interactive use-cases where there is no shell prompt, the PATH is not updated. [Shims](https://mise.jdx.dev/dev-tools/shims.html) give us access to the mise tools in non-interactive environments.
+mise updates the PATH every time the shell prompt is displayed. In non-interactive use cases where there is no shell prompt, the PATH is not updated. [Shims](https://mise.jdx.dev/dev-tools/shims.html) gives us access to the mise tools in non-interactive environments.
 
 I use [starship](https://starship.rs/) as a shell prompt so I install it globally:
 ```shell
@@ -80,7 +80,7 @@ For starship to work, we need to initialise it by adding the following line to `
 eval "$(starship init zsh)"
 ```
 
-But this will not work because `.zshrc{:sh}` has ran in a non-interactive session (and no prompt displayed) and mise has not been able to add starship to the path. mise provides shims for the tools in `~/.local/share/mise/shims` so we can change our `.zshrc{:sh}` command to use the mise starship shim and we are good to go.
+But this will not work because `.zshrc{:sh}` has run in a non-interactive session (and no prompt displayed) and mise has not been able to add starship to the path. mise provides shims for the tools in `~/.local/share/mise/shims` so we can change our `.zshrc{:sh}` command to use the mise starship shim and we are good to go.
 
 ```shell
 eval "$(~/.local/share/mise/shims/starship init zsh)"
