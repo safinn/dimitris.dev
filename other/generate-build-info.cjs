@@ -1,9 +1,6 @@
 const process = require('node:process')
 const path = require('node:path')
 const fs = require('node:fs')
-// this is installed by remix...
-
-const fetch = require('node-fetch')
 
 const commit = process.env.COMMIT_SHA
 
