@@ -77,7 +77,7 @@ mise use -g starship
 
 For starship to work, we need to initialise it by adding the following line to `~/.zshrc{:sh}`
 ```shell
-eval "$(starship init zsh)" # broken
+eval "$(starship init zsh)"
 ```
 
 But this will not work because `.zshrc{:sh}` has ran in a non-interactive session (and no prompt displayed) and mise has not been able to add starship to the path. mise provides shims for the tools in `~/.local/share/mise/shims` so we can change our `.zshrc{:sh}` command to use the mise starship shim and we are good to go.
