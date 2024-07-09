@@ -34,7 +34,6 @@ html.dark .prose {
   border-radius: 8px;
 }
 
-
 html.dark .prose pre {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
