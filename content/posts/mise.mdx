@@ -10,9 +10,8 @@ Installing and managing many development environment tools and keeping them alig
 ### Install
 
 ```sh
-curl https://mise.run | sh # install
-echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc # activate
-# for other shells see details
+curl https://mise.run | sh
+echo 'eval "$(~/.local/bin/mise activate zsh)"' >> ~/.zshrc
 ```
 
 *Make sure you restart your shell session after modifying your rc file in order for it to take effect*
@@ -51,7 +50,7 @@ The global configuration is saved in `~/.config/mise/config.toml{:sh}`.
 
 ```shell
 touch .mise.toml
-mise use node@20 # lts at the time
+mise use node@20
 mise use pnpm
 ```
 
@@ -64,7 +63,7 @@ Users who encounter an existing `.mise.toml{:sh}` file simply run `mise install{
 
 When not in our project directory, the global version of node (latest) will be used but when we `cd{:sh}` into our project directory with `.mise.toml{:sh}` node version 20 will be used. Try printing the version to see for yourself in different directories.
 
-Globally we might live on the edge and install the latest `node{:sh}` version but for this specific project we are using the long-term support version.
+Globally we might live on the edge and install the latest `node{:sh}` version but for this specific project we are using the long-term support (lts) version.
 </details>
 
 ### Shims
