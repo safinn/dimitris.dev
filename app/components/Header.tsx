@@ -30,11 +30,11 @@ export default function Header() {
           <NavItem to="/">Home</NavItem>
           <NavItem to="/posts">Blog</NavItem>
           <NavItem
-            to="https://twitter.com/safinn"
+            to="https://x.com/safinn"
             target="_blank"
-            ariaLabel="Link to Twitter"
+            ariaLabel="Link to X"
           >
-            <Icon id={Icons.Twitter} width="1.2em" height="1.2em" />
+            <Icon id={Icons.X} width="1.2em" height="1.2em" />
           </NavItem>
           <NavItem
             to="https://github.com/safinn"
