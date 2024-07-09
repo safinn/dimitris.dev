@@ -6,7 +6,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "node ../other/generate-build-info.js && remix vite:build",
+    "build": "node ../other/generate-build-info.cjs && remix vite:build",
     "deploy": "fly deploy --remote-only",
     "dev": "NODE_ENV=development node ./server.js | pino-pretty -c",
     "start": "cross-env NODE_ENV=production node ./server.js",
