@@ -7,6 +7,7 @@ export enum Icons {
   GitHub = 'github',
   Sun = 'sun',
   Moon = 'moon',
+  X = 'x',
 }
 
 export default function Icon({
