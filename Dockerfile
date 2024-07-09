@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.2.0
+ARG NODE_VERSION=22.4
 FROM node:${NODE_VERSION}-slim as base
 
 LABEL fly_launch_runtime="Remix"
@@ -36,6 +36,8 @@ RUN pnpm install --frozen-lockfile --prod=false
 COPY --link . .
 
 # Build application
+RUN mkdir ./public/build
+RUN node ./other/generate-build-info.cjs
 RUN pnpm run build
 
 # Remove development dependencies
@@ -46,7 +48,7 @@ RUN pnpm prune --prod
 FROM base
 
 # Install, configure litefs
-COPY --from=flyio/litefs:0.5.1 /usr/local/bin/litefs /usr/local/bin/litefs
+COPY --from=flyio/litefs:0.5.11 /usr/local/bin/litefs /usr/local/bin/litefs
 COPY --link other/litefs.yml /etc/litefs.yml
 
 # Install packages needed for deployment
