@@ -2,6 +2,7 @@ import process from 'node:process'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import type { MetaFunction } from '@remix-run/react'
 import { Link, useLoaderData } from '@remix-run/react'
+import { format } from 'date-fns'
 import type { MdxListItemViews } from '~/services/mdx.server'
 import { getBlogMdxListItems } from '~/services/mdx.server'
 
@@ -49,7 +50,7 @@ export default function Posts() {
             <div>{data.emptyLine}</div>
           )
         : (
-            <ol>
+            <ol className="space-y-4">
               {data.posts.map(post => (
                 <PostItem key={post.slug} post={post} />
               ))}
@@ -61,18 +62,29 @@ export default function Posts() {
 
 function PostItem({ post }: { post: MdxListItemViews }) {
   return (
-    <li className="flex space-x-2 items-center">
-      {(post.frontmatter.draft || post.frontmatter.unlisted) && (
+    <li className="flex items-center gap-6">
+      {/* {(post.frontmatter.draft || post.frontmatter.unlisted) && (
         <span className="text-xs font-semibold uppercase bg-orange-500 rounded px-1 py-0.5 text-zinc-800">
           {post.frontmatter.draft ? 'Draft' : 'Unlisted'}
         </span>
-      )}
-      <Link to={post.slug}>
-        {post.frontmatter.title}
-        {' '}
-        {post.views}
-        {' '}
-        {post.views === 1 ? 'view' : 'views'}
+      )} */}
+
+      <Link to={post.slug} className="group leading-none">
+        <div className="text-sm opacity-70">
+          {post.frontmatter.date ? format(post.frontmatter.date, 'yyyy.MM.dd') : ''}
+          {' '}
+          •
+          {' '}
+          {post.readTime?.text}
+          {' '}
+          •
+          {' '}
+          {post.views}
+          {' '}
+          {post.views === 1 ? 'view' : 'views'}
+        </div>
+        <div className="font-semibold group-hover:underline dark:group-hover:text-zinc-100 group-hover:text-zinc-900 transition-colors">{post.frontmatter.title}</div>
+
       </Link>
     </li>
   )
