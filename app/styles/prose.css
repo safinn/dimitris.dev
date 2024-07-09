@@ -34,11 +34,10 @@ html.dark .prose {
   border-radius: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .prose pre {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
+
+html.dark .prose pre {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
 }
 
 .prose pre [data-line] {
@@ -52,13 +51,13 @@ code[data-theme*=' '] span {
   background-color: var(--shiki-light-bg);
 }
 
-@media (prefers-color-scheme: dark) {
-  code[data-theme*=' '],
-  code[data-theme*=' '] span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
+
+html.dark code[data-theme*=' '],
+html.dark code[data-theme*=' '] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
 }
+
 
 /* elements */
 
