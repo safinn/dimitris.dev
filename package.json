@@ -21,7 +21,7 @@
     "@remix-run/node": "^2.10.2",
     "@remix-run/react": "^2.10.2",
     "@resvg/resvg-js": "^2.6.2",
-    "better-sqlite3": "^11.1.2",
+    "better-sqlite3": "^11.8.1",
     "chokidar": "^3.6.0",
     "clsx": "^2.1.1",
     "compression": "^1.7.4",
