@@ -3,8 +3,42 @@ title: Debugging Golang with Delve in VS Code
 description:
 date: 2025-01-28
 draft: true
-categories: tools, docker, go, debug
+categories: tools, docker, go, debug, vscode
 ---
+
+For a long time, I've had trouble reliably debugging Golang applications in VS Code. Breakpoints set were rarely hit and the flakey process was frustrating having to constantly restart the debug sever and disable then re-enable breakpoints and hope they get hit.
+
+My setup didn't help due to multiple services being built and run in docker containers. Colleagues using JetBrains GoLand seemed to magically have a reliable setup but in VS Code this was not the case.
+
+## The Setup
+
+Debugging Go applications is achieved using Delve (dlv). Make sure you have the latest version installed whether in a docker container or on the host machine (v1.24.0 at the time of this post).
+
+```sh
+// On the local machine:
+go install github.com/go-delve/delve/cmd/dlv@latest
+
+// In a Dockerfile:
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+```
+
+### Building the Binary
+
+> **_NOTE:_**  This step is only applicable if debugging a precompiled binary.
+
+It's common to add many flags to the build command to optimise and reduce the size of the binary but this can conflict with the debugging process causing flakey breakpoints.
+
+#### `-trimpath`
+
+I'd recommend removing this flag only for the debugging process for simplicity. While it's possible to keep it and be closer to a production build, it does increase the configuration required to setup debugging. See [here](https://github.com/golang/vscode-go/wiki/debugging#trimpath-tips) for required configuration when using the `-trimpath` flag.
+
+#### `-gcflags=all="-N -l"`
+
+Include this tag when building the Go binary. It preserve the debug information by disabling inlining and optimisations that can interfere with debugging so reliable debugging can be performed.
+
+### VS Code Configuration
+
+...
 
 1. launch.json
   a. substituePath
@@ -12,4 +46,3 @@ categories: tools, docker, go, debug
   b. dlv-dap
   c. remote
 2. launch composites
-3. go build arguments
